@@ -1,5 +1,18 @@
 """Practical work 2: operation counting, growth classes and benchmarks."""
 
+from .benchmarks import (
+    BUDGETS,
+    COURSE_NUMBERS,
+    MaxInstance,
+    PrimeMeasurement,
+    complexity_table,
+    format_duration,
+    is_prime,
+    max_instance_sizes,
+    measure_prime,
+    prime_iterations,
+    theoretical_times,
+)
 from .counting import (
     Count,
     program1,
@@ -24,11 +37,21 @@ from .growth import (
 )
 
 __all__ = [
+    "BUDGETS",
+    "COURSE_NUMBERS",
     "FUNCTIONS",
     "GROWTH_CLASSES",
     "GROWTH_ORDER",
     "ComplexityClass",
     "Count",
+    "MaxInstance",
+    "PrimeMeasurement",
+    "complexity_table",
+    "format_duration",
+    "is_prime",
+    "max_instance_sizes",
+    "measure_prime",
+    "prime_iterations",
     "program1",
     "program1_formula",
     "program2",
@@ -42,4 +65,5 @@ __all__ = [
     "rank",
     "same_class",
     "theta_class",
+    "theoretical_times",
 ]
