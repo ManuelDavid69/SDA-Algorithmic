@@ -2,5 +2,6 @@
 
 from .merge import merge, merge_sort
 from .selection import selection_sort
+from .thirds import thirds_sort
 
-__all__ = ["merge", "merge_sort", "selection_sort"]
+__all__ = ["merge", "merge_sort", "selection_sort", "thirds_sort"]
