@@ -1,5 +1,6 @@
 """Practical work 5: binary search trees, expression trees, Akinator."""
 
+from .akinator import Akinator, AnimalNode
 from .bst import BST, BSTNode
 from .expression_tree import (
     ExprNode,
@@ -13,6 +14,8 @@ from .ternary import TernaryNode, evaluate_ternary, parse_ternary, to_ternary
 from .tree_printer import print_tree, render_tree, tree_lines
 
 __all__ = [
+    "Akinator",
+    "AnimalNode",
     "BST",
     "BSTNode",
     "ExprNode",
