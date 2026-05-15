@@ -12,6 +12,13 @@ from .fixture import (
     load_graph,
     write_graph,
 )
+from .routing import (
+    edge_attributes,
+    load_city_graph,
+    nearest_node,
+    plot_route,
+    shortest_route,
+)
 
 __all__ = [
     "DATA_PATH",
@@ -24,7 +31,12 @@ __all__ = [
     "dijkstra1",
     "dijkstra2",
     "dijkstra_heap",
+    "edge_attributes",
     "edge_weight",
+    "load_city_graph",
     "load_graph",
+    "nearest_node",
+    "plot_route",
+    "shortest_route",
     "write_graph",
 ]
