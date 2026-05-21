@@ -227,7 +227,9 @@ def complexity_table(budgets: dict[str, float] | None = None) -> list[list[str]]
     for label in labels:
         row = [label]
         for seconds in budgets.values():
-            instance = next(item for item in max_instance_sizes(seconds) if item.complexity == label)
+            instance = next(
+                item for item in max_instance_sizes(seconds) if item.complexity == label
+            )
             row.append(instance.display)
         rows.append(row)
     return rows

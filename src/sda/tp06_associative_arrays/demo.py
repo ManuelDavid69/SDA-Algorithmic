@@ -32,7 +32,10 @@ def main() -> None:
     table = HashTable()
     for key in KEYS:
         probes = table.insert(key, key)
-        print(f"{key}: h(k) = {key % 1009:>3}, extra probes = {probes}, slot = {table.slot_of(key)}")
+        print(
+            f"{key}: h(k) = {key % 1009:>3}, extra probes = {probes}, "
+            f"slot = {table.slot_of(key)}"
+        )
     print(f"load factor for {len(table)} keys: {table.load_factor:.4f}")
     print(f"theoretical load factor for 700 keys: {700 / 1009:.4f}")
 

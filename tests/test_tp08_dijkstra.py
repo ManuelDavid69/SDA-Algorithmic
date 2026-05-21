@@ -59,11 +59,10 @@ def test_dijkstra_matches_networkx(algorithm):
     for target in (1, 5, 9, 12, 17, 19):
         distance, path = algorithm(graph, 0, target)
         expected_distance = nx.shortest_path_length(graph, 0, target, weight="weight")
-        expected_path = nx.shortest_path(graph, 0, target, weight="weight")
         assert distance == pytest.approx(expected_distance)
-        assert sum(graph[u][v]["weight"] for u, v in zip(path, path[1:])) == pytest.approx(
-            distance
-        )
+        assert sum(
+            graph[u][v]["weight"] for u, v in zip(path, path[1:], strict=False)
+        ) == pytest.approx(distance)
         # The path is a valid shortest path, even if ties could give another one.
         assert path[0] == 0 and path[-1] == target
         assert distance == pytest.approx(expected_distance)

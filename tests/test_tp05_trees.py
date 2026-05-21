@@ -3,7 +3,7 @@
 import pytest
 
 from sda.tp05_trees.akinator import Akinator, AnimalNode
-from sda.tp05_trees.bst import BST, BSTNode
+from sda.tp05_trees.bst import BST
 from sda.tp05_trees.expression_tree import (
     build_from_rpn,
     evaluate,

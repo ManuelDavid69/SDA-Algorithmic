@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Callable, Iterable
+from collections.abc import Callable, Iterable
 
 
 def numbers_ascending(n: int) -> list[int]:

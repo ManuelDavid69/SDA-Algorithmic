@@ -5,13 +5,13 @@ import math
 import pytest
 
 from sda.tp02_complexity.benchmarks import (
+    complexity_table,
     format_duration,
     is_prime,
     max_instance_sizes,
     measure_prime,
     prime_iterations,
     theoretical_times,
-    complexity_table,
 )
 from sda.tp02_complexity.counting import (
     program1,
@@ -183,7 +183,16 @@ def test_complexity_table_shape():
     assert len(table) == 9
     assert len(table[0]) == 8
     assert table[0][0] == "Complexity"
-    assert [row[0] for row in table[1:]] == ["lg n", "sqrt(n)", "n", "n lg n", "n^2", "n^3", "2^n", "n!"]
+    assert [row[0] for row in table[1:]] == [
+        "lg n",
+        "sqrt(n)",
+        "n",
+        "n lg n",
+        "n^2",
+        "n^3",
+        "2^n",
+        "n!",
+    ]
 
 
 def test_course_numbers_are_all_odd():

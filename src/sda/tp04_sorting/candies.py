@@ -7,8 +7,8 @@ packet is minimal.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from itertools import combinations
-from typing import Sequence
 
 
 def brute_force(packets: Sequence[int], children: int) -> tuple[int, tuple[int, ...]]:

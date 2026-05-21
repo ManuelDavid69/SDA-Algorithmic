@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import functools
 from collections import deque
-from typing import Hashable, Iterable, Iterator
+from collections.abc import Hashable, Iterable, Iterator
 
 Vertex = Hashable
 
@@ -401,7 +402,11 @@ class Graph:
     def greedy_coloring(self) -> dict[Vertex, int]:
         colors: dict[Vertex, int] = {}
         for vertex in sorted(self._adj, key=self.degree, reverse=True):
-            used = {colors[neighbour] for neighbour in self.neighbours(vertex) if neighbour in colors}
+            used = {
+                colors[neighbour]
+                for neighbour in self.neighbours(vertex)
+                if neighbour in colors
+            }
             color = 0
             while color in used:
                 color += 1
@@ -458,9 +463,8 @@ class Graph:
         return sorted(best, key=repr)
 
     def max_matching(self) -> list[tuple[Vertex, Vertex]]:
-        from functools import lru_cache
 
-        @lru_cache(maxsize=None)
+        @functools.cache
         def matching(remaining: frozenset[Vertex]) -> tuple[tuple[Vertex, Vertex], ...]:
             if not remaining:
                 return ()

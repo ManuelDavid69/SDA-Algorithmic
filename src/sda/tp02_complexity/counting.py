@@ -58,6 +58,7 @@ def program3(n: int) -> Count:
     a, b, c = 5, 6, 10  # 3 operations
     d = 33
     operations = 3
+    _ = c
     for i in range(n):
         for j in range(n):
             x = i * i

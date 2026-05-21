@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import copy
 import json
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
 
 YES = {"o", "oui", "y", "yes"}
 NO = {"n", "non", "no"}
