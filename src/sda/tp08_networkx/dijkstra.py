@@ -1,4 +1,4 @@
-"""Dijkstra's shortest path algorithm, with three visited-set strategies."""
+"""Algorithme de plus court chemin de Dijkstra, avec trois stratégies d'ensemble des visités."""
 
 from __future__ import annotations
 
@@ -10,10 +10,10 @@ import networkx as nx
 
 
 def edge_weight(data: Any) -> float:
-    """Extract the weight of an edge from a NetworkX data dictionary.
+    """Extrait le poids d'une arête d'un dictionnaire de données NetworkX.
 
-    Handles the simple ``{"weight": w}`` form, the ``{"length": w}`` form used
-    by OSMnx, and the nested ``{0: {"weight": w}}`` form of a MultiDiGraph.
+    Gère la forme simple ``{"weight": w}``, la forme ``{"length": w}`` utilisée
+    par OSMnx, et la forme imbriquée ``{0: {"weight": w}}`` d'un MultiDiGraph.
     """
     if isinstance(data, dict):
         if "weight" in data:
@@ -28,7 +28,7 @@ def edge_weight(data: Any) -> float:
 def _check_nodes(graph: nx.Graph, *nodes: int) -> None:
     for node in nodes:
         if node not in graph:
-            raise KeyError(f"node {node!r} is not in the graph")
+            raise KeyError(f"le nœud {node!r} n'est pas dans le graphe")
 
 
 def _reconstruct(previous: dict, start: int, target: int) -> list[int]:
@@ -40,11 +40,11 @@ def _reconstruct(previous: dict, start: int, target: int) -> list[int]:
 
 
 def dijkstra1(graph: nx.Graph, start: int, target: int) -> tuple[float, list[int]]:
-    """Reference version: the visited vertices are kept in a **list**.
+    """Version de référence : les sommets visités sont conservés dans une **liste**.
 
-    ``vertex in visited`` is ``O(V)``, hence the loop wastes ``O(V^2)`` on
-    membership tests in addition to the ``O(V^2)`` minimum search.  This is the
-    version asked for in question 2 of the statement.
+    ``vertex in visited`` est en ``O(V)``, donc la boucle gaspille ``O(V^2)`` en
+    tests d'appartenance en plus de la recherche du minimum en ``O(V^2)``.
+    C'est la version demandée à la question 2 de l'énoncé.
     """
     _check_nodes(graph, start, target)
     distances: dict[int, float] = {start: 0.0}
@@ -73,10 +73,11 @@ def dijkstra1(graph: nx.Graph, start: int, target: int) -> tuple[float, list[int
 
 
 def dijkstra2(graph: nx.Graph, start: int, target: int) -> tuple[float, list[int]]:
-    """Same algorithm, but the visited vertices are stored in a **set**.
+    """Même algorithme, mais les sommets visités sont stockés dans un **ensemble**.
 
-    Membership becomes ``O(1)``, so the only remaining quadratic part is the
-    linear search for the minimum.  The result is identical to `dijkstra1`.
+    L'appartenance devient ``O(1)``, la seule partie quadratique restante est
+    donc la recherche linéaire du minimum. Le résultat est identique à
+    `dijkstra1`.
     """
     _check_nodes(graph, start, target)
     distances: dict[int, float] = {start: 0.0}
@@ -105,10 +106,11 @@ def dijkstra2(graph: nx.Graph, start: int, target: int) -> tuple[float, list[int
 
 
 def dijkstra_heap(graph: nx.Graph, start: int, target: int) -> tuple[float, list[int]]:
-    """Dijkstra with a binary heap: ``O((V + E) log V)``.
+    """Dijkstra avec un tas binaire : ``O((V + E) log V)``.
 
-    NetworkX does not support decrease-key on an arbitrary heap, so a stale
-    ``(distance, node)`` pair is simply skipped when it is popped.
+    NetworkX ne prend pas en charge la diminution de clé sur un tas quelconque,
+    une paire ``(distance, node)`` obsolète est donc simplement ignorée
+    lorsqu'elle est extraite.
     """
     _check_nodes(graph, start, target)
     distances: dict[int, float] = {start: 0.0}

@@ -1,14 +1,14 @@
-"""Linked stack and bracket analysis (TP 1, exercise 2).
+"""Pile chaînée et analyse de parenthèses (TP 1, exercice 2).
 
-The algorithm scans the expression from left to right:
+L'algorithme parcourt l'expression de gauche à droite :
 
-* an opening bracket is pushed on the stack;
-* a closing bracket must match the bracket on top of the stack, otherwise the
-  expression is invalid;
-* at the end, the stack must be empty.
+* une parenthèse ouvrante est empilée ;
+* une parenthèse fermante doit correspondre à la parenthèse au sommet de la
+  pile, sinon l'expression est invalide ;
+* à la fin, la pile doit être vide.
 
-Only the four bracket pairs used in the course are considered
-(``{}``, ``<>``, ``()`` and ``[]``); every other character is ignored.
+Seules les quatre paires de parenthèses utilisées dans le cours sont prises en
+compte (``{}``, ``<>``, ``()`` et ``[]``) ; tout autre caractère est ignoré.
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ CLOSING = {closing: opening for opening, closing in OPENING.items()}
 
 
 class Stack:
-    """A LIFO stack implemented with a singly linked list."""
+    """Une pile LIFO implémentée à l'aide d'une liste simplement chaînée."""
 
     def __init__(self) -> None:
         self._head: Node | None = None
@@ -49,7 +49,7 @@ class Stack:
 
     def pop(self) -> Any:
         if self._head is None:
-            raise IndexError("pop from an empty stack")
+            raise IndexError("dépilement d'une pile vide")
         node = self._head
         self._head = node.next
         self._size -= 1
@@ -57,7 +57,7 @@ class Stack:
 
     def peek(self) -> Any:
         if self._head is None:
-            raise IndexError("peek at an empty stack")
+            raise IndexError("consultation du sommet d'une pile vide")
         return self._head.value
 
     def __iter__(self):
@@ -72,11 +72,11 @@ class Stack:
 
 @dataclass(frozen=True)
 class BracketReport:
-    """Result of :func:`analyse_text`.
+    """Résultat de :func:`analyse_text`.
 
-    ``line`` and ``column`` are 1-based and point at the first faulty
-    character.  For an unclosed opening bracket, they point at that opening
-    bracket.
+    ``line`` et ``column`` sont indexés à partir de 1 et désignent le premier
+    caractère fautif.  Pour une parenthèse ouvrante non fermée, ils désignent
+    cette parenthèse ouvrante.
     """
 
     valid: bool
@@ -90,7 +90,7 @@ class BracketReport:
 
 
 def analyse(expression: str) -> bool:
-    """Return ``True`` when ``expression`` is correctly parenthesised."""
+    """Renvoie ``True`` lorsque ``expression`` est correctement parenthésée."""
     stack: Stack = Stack()
     for character in expression:
         if character in OPENING:
@@ -103,7 +103,7 @@ def analyse(expression: str) -> bool:
 
 
 def analyse_text(text: str) -> BracketReport:
-    """Analyse ``text`` and locate the first bracket error, if any."""
+    """Analyse ``text`` et localise la première erreur de parenthésage, s'il y en a une."""
     stack: Stack = Stack()
     line = 1
     column = 0
@@ -118,7 +118,7 @@ def analyse_text(text: str) -> BracketReport:
         elif character in CLOSING:
             if stack.is_empty():
                 return BracketReport(
-                    False, line, column, character, f"unexpected closing bracket {character!r}"
+                    False, line, column, character, f"parenthèse fermante inattendue {character!r}"
                 )
             opening, open_line, open_column = stack.peek()
             if opening != CLOSING[character]:
@@ -127,8 +127,8 @@ def analyse_text(text: str) -> BracketReport:
                     line,
                     column,
                     character,
-                    f"{character!r} closes {opening!r} opened at line {open_line}, "
-                    f"column {open_column}",
+                    f"{character!r} ferme {opening!r} ouvert à la ligne {open_line}, "
+                    f"colonne {open_column}",
                 )
             stack.pop()
 
@@ -139,12 +139,12 @@ def analyse_text(text: str) -> BracketReport:
             open_line,
             open_column,
             opening,
-            f"unclosed bracket {opening!r}",
+            f"parenthèse non fermée {opening!r}",
         )
     return BracketReport(True)
 
 
 def analyse_file(path: str | Path) -> BracketReport:
-    """Analyse a UTF-8 text file and report the first bracket error."""
+    """Analyse un fichier texte UTF-8 et signale la première erreur de parenthésage."""
     text = Path(path).read_text(encoding="utf-8")
     return analyse_text(text)

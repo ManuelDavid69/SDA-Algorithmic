@@ -1,4 +1,4 @@
-"""Practical work 5: binary search trees, expression trees, Akinator."""
+"""Travaux pratiques 5 : arbres binaires de recherche, arbres d'expression, Akinator."""
 
 from .akinator import Akinator, AnimalNode
 from .bst import BST, BSTNode

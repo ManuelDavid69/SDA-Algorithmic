@@ -1,4 +1,4 @@
-"""Practical work 2: operation counting, growth classes and benchmarks."""
+"""Travaux pratiques 2 : comptage d'opérations, classes de croissance et mesures de performance."""
 
 from .benchmarks import (
     BUDGETS,

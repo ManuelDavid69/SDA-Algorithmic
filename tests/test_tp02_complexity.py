@@ -1,4 +1,4 @@
-"""Tests for TP 2: operation counts, growth classes and benchmarks."""
+"""Tests du TP 2 : comptage d'opérations, classes de croissance et benchmarks."""
 
 import math
 
@@ -146,8 +146,8 @@ def test_format_duration_units():
     assert format_duration(2) == "2.00 s"
     assert format_duration(120) == "2.00 min"
     assert format_duration(7200) == "2.00 h"
-    assert format_duration(2 * 86400) == "2.00 days"
-    assert format_duration(2 * 365 * 86400) == "2.00 years"
+    assert format_duration(2 * 86400) == "2.00 jours"
+    assert format_duration(2 * 365 * 86400) == "2.00 ans"
     assert "e+" in format_duration(1e9 * 365 * 86400)
 
 
@@ -155,8 +155,8 @@ def test_theoretical_times():
     times = theoretical_times(10**6)
     assert set(times) == {"log n", "n", "n^2", "2^n"}
     assert times["n"] == "1.00 s"
-    assert times["n^2"].endswith("days")
-    assert "years" in times["2^n"]
+    assert times["n^2"].endswith("jours")
+    assert "ans" in times["2^n"]
 
 
 def test_max_instance_sizes_one_second():
@@ -182,7 +182,7 @@ def test_complexity_table_shape():
     table = complexity_table()
     assert len(table) == 9
     assert len(table[0]) == 8
-    assert table[0][0] == "Complexity"
+    assert table[0][0] == "Complexité"
     assert [row[0] for row in table[1:]] == [
         "lg n",
         "sqrt(n)",

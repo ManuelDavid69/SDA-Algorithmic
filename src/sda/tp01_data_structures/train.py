@@ -1,4 +1,4 @@
-"""Train simulation on top of the linked list (TP 1, exercise 1, questions 3-4)."""
+"""Simulation de train reposant sur la liste chaînée (TP 1, exercice 1, questions 3-4)."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from .linked_list import LinkedList
 
 @dataclass
 class Wagon:
-    """A wagon with a fixed capacity."""
+    """Un wagon avec une capacité fixe."""
 
     number: int
     capacity: int = 4
@@ -17,9 +17,9 @@ class Wagon:
 
     def __post_init__(self) -> None:
         if self.number < 1:
-            raise ValueError("wagon numbers start at 1")
+            raise ValueError("la numérotation des wagons commence à 1")
         if self.capacity < 1:
-            raise ValueError("a wagon must have a positive capacity")
+            raise ValueError("un wagon doit avoir une capacité positive")
 
     @property
     def is_full(self) -> bool:
@@ -27,31 +27,31 @@ class Wagon:
 
     def board(self, passenger: str) -> None:
         if self.is_full:
-            raise ValueError(f"wagon {self.number} is full")
+            raise ValueError(f"le wagon {self.number} est plein")
         self.passengers.append(passenger)
 
     def alight(self) -> str:
         if not self.passengers:
-            raise IndexError(f"wagon {self.number} is empty")
+            raise IndexError(f"le wagon {self.number} est vide")
         return self.passengers.pop()
 
     def __repr__(self) -> str:
-        contents = ", ".join(self.passengers) if self.passengers else "empty"
-        return f"Wagon {self.number} ({len(self.passengers)}/{self.capacity}): {contents}"
+        contents = ", ".join(self.passengers) if self.passengers else "vide"
+        return f"Wagon {self.number} ({len(self.passengers)}/{self.capacity}) : {contents}"
 
 
 class Train:
-    """A train made of a fixed number of wagons.
+    """Un train composé d'un nombre fixe de wagons.
 
-    ``board(passenger, k)`` starts at wagon ``k`` and walks towards the end of
-    the train, as requested by questions 1-3.  With ``search_backwards=True``
-    (question 4), a passenger who finds no room after wagon ``k`` walks back
-    towards the front of the train before giving up.
+    ``board(passenger, k)`` commence au wagon ``k`` et parcourt le train vers
+    l'arrière, comme demandé aux questions 1-3.  Avec ``search_backwards=True``
+    (question 4), un passager qui ne trouve pas de place après le wagon ``k``
+    repart vers l'avant du train avant d'abandonner.
     """
 
     def __init__(self, wagons: int = 3, capacity: int = 4) -> None:
         if wagons < 1:
-            raise ValueError("a train needs at least one wagon")
+            raise ValueError("un train doit comporter au moins un wagon")
         self.wagons: LinkedList = LinkedList(
             Wagon(number, capacity) for number in range(1, wagons + 1)
         )
@@ -64,18 +64,18 @@ class Train:
 
     def _wagon(self, k: int) -> Wagon:
         if k < 1 or k > len(self.wagons):
-            raise IndexError(f"wagon out of range: {k}")
+            raise IndexError(f"wagon hors limites : {k}")
         return self.wagons.get(k - 1)
 
     def board(self, passenger: str, k: int, search_backwards: bool = False) -> int | None:
-        """Board ``passenger`` at wagon ``k`` or later.
+        """Fait monter ``passenger`` au wagon ``k`` ou après.
 
-        Returns the number of the wagon the passenger actually entered, or
-        ``None`` when the train is full.  When ``search_backwards`` is true and
-        no room is found from ``k`` to the last wagon, the search continues
-        from the first wagon up to ``k - 1``.
+        Renvoie le numéro du wagon effectivement emprunté par le passager, ou
+        ``None`` lorsque le train est complet.  Lorsque ``search_backwards`` est
+        vrai et qu'aucune place n'est trouvée de ``k`` au dernier wagon, la
+        recherche se poursuit du premier wagon jusqu'à ``k - 1``.
         """
-        self._wagon(k)  # validate k before doing anything
+        self._wagon(k)  # valider k avant toute autre opération
         start = k - 1
         order = list(range(start, len(self.wagons)))
         if search_backwards:
@@ -88,7 +88,7 @@ class Train:
         return None
 
     def alight(self, k: int) -> str:
-        """A passenger gets off wagon ``k``; return their name."""
+        """Un passager descend du wagon ``k`` ; renvoie son nom."""
         return self._wagon(k).alight()
 
     def passengers(self) -> list[str]:

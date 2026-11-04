@@ -1,4 +1,4 @@
-"""Tests for TP 8: fixture, Dijkstra implementations and routing helpers."""
+"""Tests du TP 8 : fixture, implémentations de Dijkstra et assistants de routage."""
 
 from __future__ import annotations
 
@@ -63,7 +63,8 @@ def test_dijkstra_matches_networkx(algorithm):
         assert sum(
             graph[u][v]["weight"] for u, v in zip(path, path[1:], strict=False)
         ) == pytest.approx(distance)
-        # The path is a valid shortest path, even if ties could give another one.
+        # Le chemin est un plus court chemin valide, même si des ex æquo
+        # pourraient en donner un autre.
         assert path[0] == 0 and path[-1] == target
         assert distance == pytest.approx(expected_distance)
 

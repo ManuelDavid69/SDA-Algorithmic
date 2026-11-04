@@ -1,8 +1,8 @@
-"""OSMnx helpers for the route calculator (TP 8, exercise 3).
+"""Assistants OSMnx pour le calculateur d'itinéraire (TP 8, exercice 3).
 
-The dependency is optional: install it with ``pip install -e .[routing]``.
-The functions are imported lazily so that the rest of the repository works
-without OSMnx and GeoPandas.
+La dépendance est facultative : installez-la avec ``pip install -e .[routing]``.
+Les fonctions sont importées paresseusement afin que le reste du dépôt
+fonctionne sans OSMnx ni GeoPandas.
 """
 
 from __future__ import annotations
@@ -17,30 +17,30 @@ from .dijkstra import dijkstra_heap
 def _require_osmnx():
     try:
         import osmnx as ox
-    except ImportError as error:  # pragma: no cover - depends on the environment
+    except ImportError as error:  # pragma: no cover - dépend de l'environnement
         raise ImportError(
-            "OSMnx is not installed; run `pip install -e .[routing]` "
-            "or `pip install osmnx geopandas`."
+            "OSMnx n'est pas installé ; exécutez `pip install -e .[routing]` "
+            "ou `pip install osmnx geopandas`."
         ) from error
     return ox
 
 
 def load_city_graph(place: str = "Lyon, France", network_type: str = "drive") -> nx.MultiDiGraph:
-    """Download the street network of ``place`` from OpenStreetMap."""
+    """Télécharge le réseau routier de ``place`` depuis OpenStreetMap."""
     ox = _require_osmnx()
     return ox.graph_from_place(place, network_type=network_type)
 
 
 def nearest_node(graph: nx.Graph, latitude: float, longitude: float) -> int:
-    """Return the graph node closest to a geographic point."""
+    """Renvoie le nœud du graphe le plus proche d'un point géographique."""
     ox = _require_osmnx()
     return ox.distance.nearest_nodes(graph, X=longitude, Y=latitude)
 
 
 def edge_attributes(graph: nx.Graph, source: int, target: int) -> Any:
-    """Attributes of an edge, as returned by ``get_edge_data``.
+    """Attributs d'une arête, tels que renvoyés par ``get_edge_data``.
 
-    OSMnx uses a MultiDiGraph, so the result is usually
+    OSMnx utilise un MultiDiGraph, le résultat est donc généralement
     ``{0: {"length": ..., "highway": ...}}``.
     """
     return graph.get_edge_data(source, target)
@@ -49,15 +49,15 @@ def edge_attributes(graph: nx.Graph, source: int, target: int) -> Any:
 def shortest_route(
     graph: nx.Graph, start: int, target: int
 ) -> tuple[float, list[int]]:
-    """Shortest route with the heap version of Dijkstra.
+    """Plus court chemin avec la version à tas de Dijkstra.
 
-    ``edge_weight`` understands both the ``length`` attribute of OSMnx and the
-    nested dictionary of a MultiDiGraph.
+    ``edge_weight`` comprend à la fois l'attribut ``length`` d'OSMnx et le
+    dictionnaire imbriqué d'un MultiDiGraph.
     """
     return dijkstra_heap(graph, start, target)
 
 
 def plot_route(graph: nx.Graph, route: list[int], **kwargs):
-    """Draw the graph and the route on a Matplotlib figure."""
+    """Dessine le graphe et l'itinéraire sur une figure Matplotlib."""
     ox = _require_osmnx()
     return ox.plot_graph_route(graph, route, **kwargs)

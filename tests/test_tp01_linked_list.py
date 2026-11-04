@@ -1,4 +1,4 @@
-"""Tests for the linked list (TP 1, exercise 1)."""
+"""Tests de la liste chaînée (TP 1, exercice 1)."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Towers of Hanoi (TP 3, exercise 4)."""
+"""Tours de Hanoï (TP 3, exercice 4)."""
 
 from __future__ import annotations
 
@@ -7,24 +7,24 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Move:
-    """A move of one disk from ``source`` to ``target``."""
+    """Un déplacement d'un disque de ``source`` vers ``target``."""
 
     source: int
     target: int
 
     def __str__(self) -> str:
-        return f"Move a disk from peg {self.source} to peg {self.target}"
+        return f"Déplacer un disque du piquet {self.source} vers le piquet {self.target}"
 
 
 def hanoi(n: int, source: int = 1, target: int = 3, auxiliary: int = 2) -> list[Move]:
-    """Return the list of moves that solves the Towers of Hanoi.
+    """Renvoie la liste des déplacements qui résout les tours de Hanoï.
 
-    The recurrence is ``T(n) = 2 T(n-1) + 1``, hence ``2^n - 1`` moves.
+    La récurrence est ``T(n) = 2 T(n-1) + 1``, d'où ``2^n - 1`` déplacements.
     """
     if n < 0:
-        raise ValueError("the number of disks must be non-negative")
+        raise ValueError("le nombre de disques doit être positif ou nul")
     if len({source, target, auxiliary}) != 3:
-        raise ValueError("the three pegs must be distinct")
+        raise ValueError("les trois piquets doivent être distincts")
     moves: list[Move] = []
 
     def solve(disks: int, start: int, end: int, spare: int) -> None:
@@ -39,7 +39,7 @@ def hanoi(n: int, source: int = 1, target: int = 3, auxiliary: int = 2) -> list[
 
 
 def hanoi_moves_text(n: int) -> list[str]:
-    """Same as :func:`hanoi`, but with the sentence printed in the statement."""
+    """Identique à :func:`hanoi`, mais avec la phrase imprimée dans l'énoncé."""
     return [str(move) for move in hanoi(n)]
 
 

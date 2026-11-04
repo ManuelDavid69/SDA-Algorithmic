@@ -2,74 +2,77 @@
 
 ![Python CI](https://github.com/ManuelDavid69/SDA-Algorithmic/actions/workflows/python.yml/badge.svg)
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-333%20passed-brightgreen)
-![License MIT](https://img.shields.io/badge/license-MIT-yellow)
+![Tests](https://img.shields.io/badge/tests-333%20r%C3%A9ussis-brightgreen)
+![Licence MIT](https://img.shields.io/badge/licence-MIT-yellow)
 
-Practical work for the **Data Structures and Algorithms** course at
-**CPE Lyon** (3IRC, 2025/2026), rewritten from scratch in Python.
+Travaux pratiques du cours de **Structures de données et algorithmique** à
+**CPE Lyon** (3IRC, 2025/2026), réécrits intégralement en Python.
 
-The repository follows the eight course sessions: linked lists and stacks,
-complexity analysis, recursion and divide and conquer, sorting, trees,
-hash tables and AVL trees, graph theory, and finally NetworkX with Dijkstra's
-shortest-path algorithm.
+Le dépôt suit les huit séances du cours : listes chaînées et piles, analyse de
+complexité, récursivité et diviser pour régner, tri, arbres, tables de hachage
+et arbres AVL, théorie des graphes, et enfin NetworkX avec l'algorithme de plus
+court chemin de Dijkstra.
 
-> The exercise statements are course material from CPE Lyon. This repository
-> contains the implementations, tests, benchmarks and written answers.
+> Les énoncés des exercices sont des supports de cours de CPE Lyon. Ce dépôt
+> contient les implémentations, les tests, les benchmarks et les réponses
+> rédigées.
 
 ---
 
-## Contents
+## Sommaire
 
-- [Overview](#overview)
-- [Highlights](#highlights)
-- [Quick start](#quick-start)
-- [Repository structure](#repository-structure)
-- [The eight sessions](#the-eight-sessions)
+- [Vue d'ensemble](#vue-densemble)
+- [Points forts](#points-forts)
+- [Démarrage rapide](#démarrage-rapide)
+- [Structure du dépôt](#structure-du-dépôt)
+- [Les huit séances](#les-huit-séances)
 - [Tests](#tests)
-- [Complexity summary](#complexity-summary)
+- [Récapitulatif des complexités](#récapitulatif-des-complexités)
 - [Notebooks](#notebooks)
 - [Documentation](#documentation)
-- [Credits](#credits)
-- [License](#license)
+- [Crédits](#crédits)
+- [Licence](#licence)
 
 ---
 
-## Overview
+## Vue d'ensemble
 
-| # | Session | Main deliverables | Documentation |
+| # | Séance | Principaux livrables | Documentation |
 |---|---|---|---|
-| 1 | **Data structures** | `Node`/`LinkedList` from scratch, train simulation, linked stack, bracket checker that reports line and column | [TP01](docs/TP01-data-structures.md) |
-| 2 | **Complexity** | operation counting, 15-function growth ranking, prime benchmark, time/size tables, `Theta` proof | [TP02](docs/TP02-complexity.md) |
-| 3 | **Recursion** | three Fibonacci variants, divide-and-conquer maximum, Hanoi, recursive/iterative binary search, Master Theorem | [TP03](docs/TP03-recursion.md) |
-| 4 | **Sorting** | selection, merge, two-thirds sort, candy distribution (brute force vs sliding window) | [TP04](docs/TP04-sorting.md) |
-| 5 | **Trees** | BST with deletion, ASCII printer, RPN expression trees, nested ternary parser, Akinator with JSON persistence | [TP05](docs/TP05-trees.md) |
-| 6 | **Associative arrays** | hash table with `DELETED` tombstones, AVL tree with range queries, two-index vinyl catalogue | [TP06](docs/TP06-associative-arrays.md) |
-| 7 | **Graphs** | graph library, Petersen graph, timetable, Eulerian trails, colouring, matchings and covers | [TP07](docs/TP07-graphs.md) |
-| 8 | **NetworkX & Dijkstra** | reproducible weighted graph, three Dijkstra implementations, OSMnx routing notebook | [TP08](docs/TP08-networkx-dijkstra.md) |
+| 1 | **Structures de données** | `Node`/`LinkedList` réimplémentés, simulation de train, pile chaînée, vérificateur de parenthèses qui indique la ligne et la colonne | [TP01](docs/TP01-data-structures.md) |
+| 2 | **Complexité** | comptage d'opérations, classement de la croissance de 15 fonctions, benchmark de primalité, tables temps/taille, preuve en `Theta` | [TP02](docs/TP02-complexity.md) |
+| 3 | **Récursivité** | trois variantes de Fibonacci, maximum par diviser pour régner, Tours de Hanoï, recherche dichotomique récursive/itérative, théorème maître | [TP03](docs/TP03-recursion.md) |
+| 4 | **Tri** | tri par sélection, tri fusion, tri aux deux tiers, distribution de bonbons (force brute vs fenêtre glissante) | [TP04](docs/TP04-sorting.md) |
+| 5 | **Arbres** | ABR avec suppression, affichage ASCII, arbres d'expression RPN, analyseur d'expressions ternaires imbriquées, Akinator avec persistance JSON | [TP05](docs/TP05-trees.md) |
+| 6 | **Tableaux associatifs** | table de hachage avec pierres tombales `DELETED`, arbre AVL avec requêtes par intervalle, catalogue de vinyles à deux index | [TP06](docs/TP06-associative-arrays.md) |
+| 7 | **Graphes** | bibliothèque de graphes, graphe de Petersen, emploi du temps, chaînes eulériennes, coloration, couplages et couvertures | [TP07](docs/TP07-graphs.md) |
+| 8 | **NetworkX et Dijkstra** | graphe pondéré reproductible, trois implémentations de Dijkstra, notebook de routage OSMnx | [TP08](docs/TP08-networkx-dijkstra.md) |
 
 ---
 
-## Highlights
+## Points forts
 
-- **333 tests** covering every session, including edge cases and invariants.
-- Core algorithms written **without shortcuts**: no `list.sort()` in the
-  sorting implementations, no NetworkX shortest-path call inside Dijkstra,
-  no `collections.deque` in the linked structures.
-- Three Dijkstra variants that make the impact of the visited data structure
-  measurable: on a 400-vertex graph, the list version is about **20× slower**
-  than the set version, and about **130× slower** than the heap version.
-- Complexity answers are checked by code: operation-count formulas are
-  compared with instrumented loops, the growth order is encoded as `Theta`
-  classes, and the candy algorithm is compared with brute force on random
-  instances.
-- Executed **Jupyter notebook** for the NetworkX/Dijkstra session, and a
-  ready-to-run OSMnx route calculator.
+- **333 tests** couvrant chaque séance, y compris les cas limites et les
+  invariants.
+- Algorithmes essentiels écrits **sans raccourcis** : pas de `list.sort()` dans
+  les implémentations de tri, pas d'appel au plus court chemin de NetworkX dans
+  Dijkstra, pas de `collections.deque` dans les structures chaînées.
+- Trois variantes de Dijkstra qui rendent mesurable l'impact de la structure de
+  données des sommets visités : sur un graphe de 400 sommets, la version avec
+  liste est environ **20× plus lente** que la version avec ensemble, et environ
+  **130× plus lente** que la version avec tas.
+- Les réponses de complexité sont vérifiées par le code : les formules de
+  comptage d'opérations sont comparées aux boucles instrumentées, l'ordre de
+  croissance est encodé sous forme de classes `Theta`, et l'algorithme des
+  bonbons est comparé à la force brute sur des instances aléatoires.
+- **Notebook Jupyter** exécuté pour la séance NetworkX/Dijkstra, et un
+  calculateur d'itinéraire OSMnx prêt à l'emploi.
 
 ---
 
-## Quick start
+## Démarrage rapide
 
-Requirements: **Python 3.11+**.
+Prérequis : **Python 3.11+**.
 
 ```bash
 git clone https://github.com/ManuelDavid69/SDA-Algorithmic.git
@@ -85,7 +88,7 @@ python -m pip install -e ".[dev]"
 python -m pytest
 ```
 
-Run the demonstration of one session:
+Lancer la démonstration d'une séance :
 
 ```bash
 python -m sda.tp01_data_structures.demo
@@ -98,7 +101,7 @@ python -m sda.tp07_graphs.demo
 python -m sda.tp08_networkx.demo
 ```
 
-Lint the code with Ruff:
+Vérifier le code avec Ruff :
 
 ```bash
 python -m ruff check .
@@ -106,100 +109,107 @@ python -m ruff check .
 
 ---
 
-## Repository structure
+## Structure du dépôt
 
 ```
 src/sda/
-|-- tp01_data_structures/    linked list, train, stack, bracket analysis
-|-- tp02_complexity/         operation counts, growth classes, benchmarks
-|-- tp03_recursion/          displays, Fibonacci, Hanoi, binary search
-|-- tp04_sorting/            selection, merge, two-thirds, candies
-|-- tp05_trees/              BST, printer, expression trees, ternary, Akinator
-|-- tp06_associative_arrays/ hash table, AVL tree, vinyl catalogue
-|-- tp07_graphs/             graph library, examples, TD answers
-`-- tp08_networkx/           fixture, Dijkstra variants, OSMnx helpers
+|-- tp01_data_structures/    liste chaînée, train, pile, analyse de parenthèses
+|-- tp02_complexity/         comptages d'opérations, classes de croissance, benchmarks
+|-- tp03_recursion/          affichages, Fibonacci, Hanoï, recherche dichotomique
+|-- tp04_sorting/            sélection, fusion, deux tiers, bonbons
+|-- tp05_trees/              ABR, affichage, arbres d'expression, ternaire, Akinator
+|-- tp06_associative_arrays/ table de hachage, arbre AVL, catalogue de vinyles
+|-- tp07_graphs/             bibliothèque de graphes, exemples, réponses de TD
+`-- tp08_networkx/           jeu de données, variantes de Dijkstra, utilitaires OSMnx
 
-tests/                       333 pytest tests, one file per session
-docs/                        one detailed document per session
-notebooks/                   NetworkX/Dijkstra and OSMnx notebooks
-data/                        weighted graph fixture for TP 8
-.github/workflows/python.yml CI on Python 3.11, 3.12 and 3.13
+tests/                       333 tests pytest, un fichier par séance
+docs/                        un document détaillé par séance
+notebooks/                   notebooks NetworkX/Dijkstra et OSMnx
+data/                        jeu de données de graphe pondéré pour le TP 8
+.github/workflows/python.yml CI sur Python 3.11, 3.12 et 3.13
 ```
 
 ---
 
-## The eight sessions
+## Les huit séances
 
-### 1. Linked lists and stacks
+### 1. Listes chaînées et piles
 
-- `Node` and `LinkedList` with insertion, deletion, search, access, size and
-  a readable `repr`.
-- Train simulation: each wagon holds four passengers; a full wagon sends the
-  passenger to the next one, with the optional "walk back to the front"
-  extension.
-- Linked `Stack` and a bracket checker for `()`, `[]`, `{}` and `<>`, with the
-  exact line and column of the first error.
+- `Node` et `LinkedList` avec insertion, suppression, recherche, accès, taille
+  et un `repr` lisible.
+- Simulation de train : chaque wagon contient quatre passagers ; un wagon plein
+  envoie le passager vers le suivant, avec l'extension optionnelle « retour vers
+  l'avant ».
+- `Stack` chaînée et vérificateur de parenthèses pour `()`, `[]`, `{}` et `<>`,
+  avec la ligne et la colonne exactes de la première erreur.
 
-### 2. Complexity
+### 2. Complexité
 
-- Five instrumented programs with closed-form operation counts.
-- The 15 functions of the statement ranked into 12 `Theta` classes.
-- Prime testing benchmark, theoretical time table for `n = 10^6`, and the
-  inverse table (largest instance in 1 second, 1 minute, ...).
-- Proof that `3n^2 - 100n + 6 = Theta(n^2)` from the definition.
+- Cinq programmes instrumentés avec des formules explicites de comptage
+  d'opérations.
+- Les 15 fonctions de l'énoncé classées en 12 classes `Theta`.
+- Benchmark de test de primalité, table théorique des temps pour `n = 10^6`, et
+  table inverse (plus grande instance en 1 seconde, 1 minute, ...).
+- Preuve que `3n^2 - 100n + 6 = Theta(n^2)` à partir de la définition.
 
-### 3. Recursion and divide and conquer
+### 3. Récursivité et diviser pour régner
 
-- Naive, memoised and tail-recursive Fibonacci, with measured timings.
-- Divide-and-conquer maximum, Towers of Hanoi (moves replayed and checked for
-  legality), recursive and iterative binary search.
-- Full Master Theorem answers, including the cases where it does not apply.
+- Fibonacci naïf, mémoïsé et récursif terminal, avec des temps mesurés.
+- Maximum par diviser pour régner, Tours de Hanoï (déplacements rejoués et
+  vérifiés quant à leur légalité), recherche dichotomique récursive et
+  itérative.
+- Réponses complètes sur le théorème maître, y compris les cas où il ne
+  s'applique pas.
 
-### 4. Sorting
+### 4. Tri
 
-- Selection sort with its loop invariant, merge sort with three analyses
-  (iteration, recursion tree, Master Theorem).
-- Two-thirds sort from the 2024 exam, with a correctness proof and its
-  `Theta(n^2.71)` complexity.
-- Candy distribution: brute force and an `O(n log n)` sliding-window solution,
-  cross-checked on random instances.
+- Tri par sélection avec son invariant de boucle, tri fusion avec trois
+  analyses (itération, arbre de récursion, théorème maître).
+- Tri aux deux tiers de l'examen 2024, avec une preuve de correction et sa
+  complexité `Theta(n^2.71)`.
+- Distribution de bonbons : force brute et solution en `O(n log n)` par fenêtre
+  glissante, recoupées sur des instances aléatoires.
 
-### 5. Trees
+### 5. Arbres
 
-- BST with the three deletion cases, traversals, height and validity check.
-- ASCII rendering of any binary tree.
-- Expression trees from RPN, infix printing with parentheses, and direct RPN
-  evaluation with a stack.
-- Recursive-descent parser for nested ternary expressions.
-- Akinator that asks questions, learns a new animal and saves its tree as
-  JSON.
+- ABR avec les trois cas de suppression, parcours, hauteur et vérification de
+  validité.
+- Rendu ASCII de n'importe quel arbre binaire.
+- Arbres d'expression à partir de la RPN, affichage infixe avec parenthèses, et
+  évaluation directe de la RPN avec une pile.
+- Analyseur descendant récursif pour les expressions ternaires imbriquées.
+- Akinator qui pose des questions, apprend un nouvel animal et sauvegarde son
+  arbre en JSON.
 
-### 6. Hash tables and AVL trees
+### 6. Tables de hachage et arbres AVL
 
-- Hash table with linear probing, probe counting and `DELETED` tombstones;
-  the deletion counterexample is reproduced in the tests.
-- AVL tree with LL/RR/LR/RL rotations, balance factors and `O(log n + k)`
-  range queries.
-- Vinyl Records Co. catalogue indexed both by reference (hash) and by year
-  (AVL), with a comparison of the two structures.
+- Table de hachage avec sondage linéaire, comptage des sondages et pierres
+  tombales `DELETED` ; le contre-exemple de suppression est reproduit dans les
+  tests.
+- Arbre AVL avec rotations LL/RR/LR/RL, facteurs d'équilibre et requêtes par
+  intervalle en `O(log n + k)`.
+- Catalogue de Vinyl Records Co. indexé à la fois par référence (hachage) et par
+  année (AVL), avec une comparaison des deux structures.
 
-### 7. Graphs
+### 7. Graphes
 
-- Adjacency-list graph with matrices, subgraphs, BFS/DFS, components and
-  bipartiteness.
-- Eulerian circuits/trails (Hierholzer), greedy and exact colouring,
-  independent sets, matchings, vertex and edge covers, isomorphism checks.
-- Encoded Petersen graph, language timetable and envelope; TD answers computed
-  by the library.
+- Graphe par listes d'adjacence avec matrices, sous-graphes, BFS/DFS,
+  composantes et bipartisme.
+- Circuits/chaînes eulériennes (Hierholzer), coloration gloutonne et exacte,
+  ensembles indépendants, couplages, couvertures de sommets et d'arêtes, tests
+  d'isomorphisme.
+- Graphe de Petersen encodé, emploi du temps des langues et enveloppe ; réponses
+  de TD calculées par la bibliothèque.
 
-### 8. NetworkX and Dijkstra
+### 8. NetworkX et Dijkstra
 
-- NetworkX discovery on the Petersen graph (degrees, matrices, subgraph,
-  drawing).
-- Dijkstra with a visited **list**, a **set** and a **binary heap**, all
-  returning the same route; timing comparison on 20 and 400 vertices.
-- OSMnx helpers for Lyon: load the street network, geocode the two addresses,
-  find the nearest nodes, compute and draw the route.
+- Découverte de NetworkX sur le graphe de Petersen (degrés, matrices,
+  sous-graphe, dessin).
+- Dijkstra avec une **liste**, un **ensemble** et un **tas binaire** de sommets
+  visités, tous renvoyant le même itinéraire ; comparaison des temps sur 20 et
+  400 sommets.
+- Utilitaires OSMnx pour Lyon : charger le réseau routier, géocoder les deux
+  adresses, trouver les nœuds les plus proches, calculer et tracer l'itinéraire.
 
 ---
 
@@ -209,61 +219,62 @@ data/                        weighted graph fixture for TP 8
 python -m pytest
 ```
 
-| Test file | Tests | Coverage |
+| Fichier de test | Tests | Couverture |
 |---|---:|---|
-| `test_tp01_linked_list.py` | 16 | list operations, bounds, equality |
-| `test_tp01_train.py` | 12 | capacity, overflow, backtracking |
-| `test_tp01_stack.py` | 25 | LIFO, valid/invalid brackets, error positions |
-| `test_tp02_complexity.py` | 102 | closed forms, growth classes, benchmarks, tables |
-| `test_tp03_recursion.py` | 40 | displays, Fibonacci, Hanoi legality, searches |
-| `test_tp04_sorting.py` | 52 | random arrays, invariants, candy vs brute force |
-| `test_tp05_trees.py` | 37 | BST deletion, rendering, RPN, ternary, Akinator |
-| `test_tp06_associative.py` | 16 | collisions, tombstones, rotations, catalogue |
-| `test_tp07_graphs.py` | 15 | matrices, traversals, Euler, colouring, covers |
-| `test_tp08_dijkstra.py` | 18 | fixture, three variants, NetworkX comparison |
+| `test_tp01_linked_list.py` | 16 | opérations de liste, bornes, égalité |
+| `test_tp01_train.py` | 12 | capacité, débordement, retour en arrière |
+| `test_tp01_stack.py` | 25 | LIFO, parenthèses valides/invalides, positions des erreurs |
+| `test_tp02_complexity.py` | 102 | formules explicites, classes de croissance, benchmarks, tables |
+| `test_tp03_recursion.py` | 40 | affichages, Fibonacci, légalité de Hanoï, recherches |
+| `test_tp04_sorting.py` | 52 | tableaux aléatoires, invariants, bonbons vs force brute |
+| `test_tp05_trees.py` | 37 | suppression dans un ABR, rendu, RPN, ternaire, Akinator |
+| `test_tp06_associative.py` | 16 | collisions, pierres tombales, rotations, catalogue |
+| `test_tp07_graphs.py` | 15 | matrices, parcours, Euler, coloration, couvertures |
+| `test_tp08_dijkstra.py` | 18 | jeu de données, trois variantes, comparaison avec NetworkX |
 | **Total** | **333** | |
 
-The suite runs in under a second and is executed by GitHub Actions on Python
-3.11, 3.12 and 3.13.
+La suite s'exécute en moins d'une seconde et est lancée par GitHub Actions sur
+Python 3.11, 3.12 et 3.13.
 
 ---
 
-## Complexity summary
+## Récapitulatif des complexités
 
-| Algorithm / structure | Time | Notes |
+| Algorithme / structure | Temps | Remarques |
 |---|---|---|
-| Linked list access / insert / delete | `O(k)` | `O(1)` at the head |
-| Stack push / pop | `O(1)` | linked implementation |
-| BST insert / search / delete | `O(h)` | `O(log n)` average, `O(n)` worst |
-| AVL insert / search / delete | `O(log n)` | height kept in each node |
-| AVL range query | `O(log n + k)` | `k` returned years |
-| Hash table (linear probing) | `O(1)` average, `O(n)` worst | `alpha = 0.694` example |
-| Selection sort | `Theta(n^2)` | best and worst case |
-| Merge sort | `Theta(n log n)` | `T(n) = 2T(n/2) + Theta(n)` |
-| Two-thirds sort | `Theta(n^2.71)` | `T(n) = 3T(2n/3) + Theta(1)` |
-| Binary search | `O(log n)` | sorted input |
-| Dijkstra with visited list | `O(VE)` worst | linear membership test |
-| Dijkstra with visited set | `O(V^2 + E)` | linear minimum search |
-| Dijkstra with heap | `O((V + E) log V)` | stale entries skipped |
+| Accès / insertion / suppression dans une liste chaînée | `O(k)` | `O(1)` en tête |
+| Pile `push` / `pop` | `O(1)` | implémentation chaînée |
+| Insertion / recherche / suppression dans un ABR | `O(h)` | `O(log n)` en moyenne, `O(n)` au pire |
+| Insertion / recherche / suppression dans un AVL | `O(log n)` | hauteur stockée dans chaque nœud |
+| Requête par intervalle dans un AVL | `O(log n + k)` | `k` années renvoyées |
+| Table de hachage (sondage linéaire) | `O(1)` en moyenne, `O(n)` au pire | exemple avec `alpha = 0.694` |
+| Tri par sélection | `Theta(n^2)` | meilleur et pire cas |
+| Tri fusion | `Theta(n log n)` | `T(n) = 2T(n/2) + Theta(n)` |
+| Tri aux deux tiers | `Theta(n^2.71)` | `T(n) = 3T(2n/3) + Theta(1)` |
+| Recherche dichotomique | `O(log n)` | entrée triée |
+| Dijkstra avec liste des visités | `O(VE)` au pire | test d'appartenance linéaire |
+| Dijkstra avec ensemble des visités | `O(V^2 + E)` | recherche linéaire du minimum |
+| Dijkstra avec tas | `O((V + E) log V)` | entrées obsolètes ignorées |
 
 ---
 
 ## Notebooks
 
 - [`notebooks/tp08_networkx_dijkstra.ipynb`](notebooks/tp08_networkx_dijkstra.ipynb)
-  — **executed**, with outputs and figures: Petersen graph drawing, induced
-  subgraph, weighted graph, the three Dijkstra versions and timings.
+  — **exécuté**, avec sorties et figures : dessin du graphe de Petersen,
+  sous-graphe induit, graphe pondéré, les trois versions de Dijkstra et les
+  temps d'exécution.
 - [`notebooks/tp08_osmnx_routing.ipynb`](notebooks/tp08_osmnx_routing.ipynb)
-  — the Lyon route calculator; not executed because it needs internet access
-  and the optional `osmnx` package.
+  — le calculateur d'itinéraire pour Lyon ; non exécuté car il nécessite un
+  accès à Internet et le paquet optionnel `osmnx`.
 
-To open them:
+Pour les ouvrir :
 
 ```bash
 python -m jupyter notebook notebooks/
 ```
 
-To re-execute the main notebook:
+Pour réexécuter le notebook principal :
 
 ```bash
 python -m nbconvert --to notebook --execute --inplace notebooks/tp08_networkx_dijkstra.ipynb
@@ -273,31 +284,31 @@ python -m nbconvert --to notebook --execute --inplace notebooks/tp08_networkx_di
 
 ## Documentation
 
-Each session has a detailed write-up with the implementation choices, the
-complexity analysis and the written answers:
+Chaque séance dispose d'un document détaillé présentant les choix
+d'implémentation, l'analyse de complexité et les réponses rédigées :
 
-| Session | Document |
+| Séance | Document |
 |---|---|
-| 1 | [Linked lists and stacks](docs/TP01-data-structures.md) |
-| 2 | [Complexity](docs/TP02-complexity.md) |
-| 3 | [Recursion and divide and conquer](docs/TP03-recursion.md) |
-| 4 | [Sorting](docs/TP04-sorting.md) |
-| 5 | [Trees](docs/TP05-trees.md) |
-| 6 | [Hash tables and AVL trees](docs/TP06-associative-arrays.md) |
-| 7 | [Graphs](docs/TP07-graphs.md) |
-| 8 | [NetworkX and Dijkstra](docs/TP08-networkx-dijkstra.md) |
+| 1 | [Listes chaînées et piles](docs/TP01-data-structures.md) |
+| 2 | [Complexité](docs/TP02-complexity.md) |
+| 3 | [Récursivité et diviser pour régner](docs/TP03-recursion.md) |
+| 4 | [Tri](docs/TP04-sorting.md) |
+| 5 | [Arbres](docs/TP05-trees.md) |
+| 6 | [Tables de hachage et arbres AVL](docs/TP06-associative-arrays.md) |
+| 7 | [Graphes](docs/TP07-graphs.md) |
+| 8 | [NetworkX et Dijkstra](docs/TP08-networkx-dijkstra.md) |
 
 ---
 
-## Credits
+## Crédits
 
-- **Course and exercise statements**: CPE Lyon, *Structures de données et
+- **Cours et énoncés des exercices** : CPE Lyon, *Structures de données et
   algorithmique*, 3IRC, 2025/2026.
-- **Implementations, tests, benchmarks, notebooks and documentation**:
+- **Implémentations, tests, benchmarks, notebooks et documentation** :
   [Manuel David](https://github.com/ManuelDavid69).
 
 ---
 
-## License
+## Licence
 
-MIT — see [LICENSE](LICENSE).
+MIT — voir [LICENSE](LICENSE).

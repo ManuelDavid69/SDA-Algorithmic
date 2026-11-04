@@ -1,8 +1,8 @@
-"""Deterministic weighted graph used by the Dijkstra practical work (TP 8).
+"""Graphe pondéré déterministe utilisé par les TP sur Dijkstra (TP 8).
 
-The course provides a random graph with 20 vertices and 30 edges.  We use a
-fixed edge list so that the tests and the notebook are reproducible; the
-format is the same multiline adjacency list as in the statement.
+Le sujet fournit un graphe aléatoire à 20 sommets et 30 arêtes. Nous utilisons
+une liste d'arêtes fixe afin que les tests et le carnet soient reproductibles ;
+le format est la même liste d'adjacence multiligne que dans l'énoncé.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ import networkx as nx
 
 DATA_PATH = Path(__file__).resolve().parents[3] / "data" / "tp08_graph.txt"
 
-# (source, target, weight)
+# (source, cible, poids)
 EDGES: list[tuple[int, int, int]] = [
     (0, 8, 36),
     (0, 9, 50),
@@ -60,13 +60,13 @@ def build_graph() -> nx.Graph:
 
 
 def write_graph(path: str | Path = DATA_PATH) -> None:
-    """Write the graph in NetworkX's multiline adjacency-list format.
+    """Écrit le graphe au format de liste d'adjacence multiligne de NetworkX.
 
-    The header is fixed (no timestamp) so that the committed fixture is
-    reproducible byte for byte.
+    L'en-tête est fixe (sans horodatage) afin que le fichier de référence
+    versionné soit reproductible octet pour octet.
     """
     graph = build_graph()
-    lines = ["# TP 8 weighted graph: 20 vertices, 30 edges"]
+    lines = ["# Graphe pondéré du TP 8 : 20 sommets, 30 arêtes"]
     for node in sorted(graph.nodes):
         neighbours = sorted(graph[node])
         lines.append(f"{node} {len(neighbours)}")
@@ -77,7 +77,7 @@ def write_graph(path: str | Path = DATA_PATH) -> None:
 
 
 def load_graph(path: str | Path = DATA_PATH) -> nx.Graph:
-    """Read the graph and normalise weights to ``float`` values."""
+    """Lit le graphe et normalise les poids en valeurs ``float``."""
     graph = nx.read_multiline_adjlist(path, nodetype=int)
     for source, target, data in graph.edges(data=True):
         if "weight" in data:

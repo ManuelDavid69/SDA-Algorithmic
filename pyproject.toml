@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "sda-algorithmic"
 version = "1.0.0"
-description = "Data structures and algorithms practical work (CPE Lyon, 3IRC 2025/2026)"
+description = "Travaux pratiques de structures de données et d'algorithmes (CPE Lyon, 3IRC 2025/2026)"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -13,13 +13,13 @@ authors = [
     { name = "Manuel David", email = "manu.david0704@gmail.com" },
 ]
 keywords = [
-    "algorithms",
-    "data-structures",
-    "graphs",
+    "algorithmes",
+    "structures-de-données",
+    "graphes",
     "dijkstra",
     "avl",
-    "sorting",
-    "recursion",
+    "tri",
+    "récursion",
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",

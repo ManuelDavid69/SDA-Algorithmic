@@ -1,4 +1,4 @@
-"""Practical work 3: recursion, divide and conquer, Hanoi and search."""
+"""Travaux pratiques 3 : récursivité, diviser pour régner, Hanoi et recherche."""
 
 from .hanoi import Move, hanoi, hanoi_moves_text, print_hanoi
 from .recursion import (

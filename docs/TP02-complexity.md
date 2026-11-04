@@ -1,29 +1,30 @@
-# TP 2 — Complexity of algorithms
+# TP 2 — Complexité des algorithmes
 
-## Objectives
+## Objectifs
 
-- count the elementary operations of short programs;
-- order functions by asymptotic growth and group them into `Theta` classes;
-- compare the running time of algorithms with different complexities;
-- check a theoretical analysis with actual measurements;
-- prove a `Theta` bound from the definition.
+- compter les opérations élémentaires de programmes courts ;
+- ordonner des fonctions par croissance asymptotique et les regrouper en classes
+  `Theta` ;
+- comparer le temps d'exécution d'algorithmes de complexités différentes ;
+- vérifier une analyse théorique par des mesures réelles ;
+- démontrer une borne `Theta` à partir de la définition.
 
-The code lives in `src/sda/tp02_complexity`:
+Le code se trouve dans `src/sda/tp02_complexity` :
 
-| Module | Contents |
+| Module | Contenu |
 |---|---|
-| `counting.py` | the five programs of exercise 1, instrumented with an operation counter |
-| `growth.py` | the 15 functions of exercise 2 and their `Theta` classes |
-| `benchmarks.py` | prime testing, runtime measurements and the time/size tables |
+| `counting.py` | les cinq programmes de l'exercice 1, instrumentés avec un compteur d'opérations |
+| `growth.py` | les 15 fonctions de l'exercice 2 et leurs classes `Theta` |
+| `benchmarks.py` | test de primalité, mesures de temps d'exécution et tables temps/taille |
 
 ---
 
-## Exercise 1 — Counting elementary operations
+## Exercice 1 — Compter les opérations élémentaires
 
-The statement asks to ignore the loop-control instructions. We count one
-operation per executed assignment/arithmetic line.
+L'énoncé demande d'ignorer les instructions de contrôle de boucle. On compte une
+opération par ligne d'affectation ou d'arithmétique exécutée.
 
-| Program | Number of operations `T(n)` | Class |
+| Programme | Nombre d'opérations `T(n)` | Classe |
 |---|---|---|
 | 1 | `2n + 1` | `Theta(n)` |
 | 2 | `n^2 + 1` | `Theta(n^2)` |
@@ -31,28 +32,29 @@ operation per executed assignment/arithmetic line.
 | 4 | `2(floor(log2 n) + 1) + 1` | `Theta(log n)` |
 | 5 | `3n^2(n^2 + 1) + 1` | `Theta(n^4)` |
 
-Details:
+Détails :
 
-1. two independent loops of `n` iterations, one assignment each;
-2. one assignment in the double loop, executed `n^2` times;
-3. three operations in the double loop (`x`, `y`, `z`) and three in the
-   simple loop (`w`, `v`, `d`), hence `3n^2 + 3n` plus the three initial
-   assignments;
-4. `i` starts at `n` and is halved at each iteration, so the loop runs
-   `floor(log2 n) + 1` times, with two operations per iteration;
-5. the innermost loop runs 6 times for each `j`, and
-   `1 + 2 + ... + n^2 = n^2(n^2 + 1)/2`, hence `6 * n^2(n^2 + 1)/2`.
+1. deux boucles indépendantes de `n` itérations, une affectation chacune ;
+2. une affectation dans la boucle double, exécutée `n^2` fois ;
+3. trois opérations dans la boucle double (`x`, `y`, `z`) et trois dans la
+   boucle simple (`w`, `v`, `d`), d'où `3n^2 + 3n` plus les trois affectations
+   initiales ;
+4. `i` part de `n` et est divisé par deux à chaque itération, donc la boucle
+   s'exécute `floor(log2 n) + 1` fois, avec deux opérations par itération ;
+5. la boucle la plus interne s'exécute 6 fois pour chaque `j`, et
+   `1 + 2 + ... + n^2 = n^2(n^2 + 1)/2`, d'où `6 * n^2(n^2 + 1)/2`.
 
-The closed forms are implemented as `programX_formula` functions and checked
-against the instrumented loops in the test suite.
+Les formules explicites sont implémentées sous forme de fonctions
+`programX_formula` et vérifiées par rapport aux boucles instrumentées dans la
+suite de tests.
 
 ---
 
-## Exercise 2 — Growth order
+## Exercice 2 — Ordre de croissance
 
-From the slowest to the fastest:
+Du plus lent au plus rapide :
 
-| # | Function | `Theta` class |
+| # | Fonction | Classe `Theta` |
 |---|---|---|
 | 1 | `6` | `Theta(1)` |
 | 2 | `lg lg n` | `Theta(lg lg n)` |
@@ -70,44 +72,46 @@ From the slowest to the fastest:
 | 14 | `2^n` | `Theta(2^n)` |
 | 15 | `n!` | `Theta(n!)` |
 
-Justification:
+Justification :
 
-- constants disappear (`6` is `Theta(1)`);
-- `lg lg n` grows slower than `lg n`, which grows slower than `(lg n)^2`;
-- every power of `n` dominates every power of `lg n`, and `sqrt(n) = n^(1/2)`
-  is between `(lg n)^2` and `n`;
-- `n lg n` is between `n` and `n^2`;
-- `n^3 + lg n` and `n - n^2 + 5n^3` are both `Theta(n^3)` (lower-order terms);
-- `2^(n-1) = (1/2) * 2^n`, so both are `Theta(2^n)`;
-- `(3/2)^n` grows slower than `2^n` because `3/2 < 2`;
-- Stirling's formula gives `n! = Theta(sqrt(n) * (n/e)^n)`, which dominates
-  every exponential `c^n` with constant `c`.
+- les constantes disparaissent (`6` est `Theta(1)`) ;
+- `lg lg n` croît plus lentement que `lg n`, qui croît plus lentement que
+  `(lg n)^2` ;
+- toute puissance de `n` domine toute puissance de `lg n`, et
+  `sqrt(n) = n^(1/2)` se situe entre `(lg n)^2` et `n` ;
+- `n lg n` se situe entre `n` et `n^2` ;
+- `n^3 + lg n` et `n - n^2 + 5n^3` sont tous deux `Theta(n^3)` (termes d'ordre
+  inférieur) ;
+- `2^(n-1) = (1/2) * 2^n`, donc les deux sont `Theta(2^n)` ;
+- `(3/2)^n` croît plus lentement que `2^n` car `3/2 < 2` ;
+- la formule de Stirling donne `n! = Theta(sqrt(n) * (n/e)^n)`, qui domine toute
+  exponentielle `c^n` à constante `c`.
 
 ---
 
-## Exercise 3 — Comparing running times
+## Exercice 3 — Comparer les temps d'exécution
 
 ### Question 1
 
-With one microsecond per elementary operation and `n = 10^6`:
+Avec une microseconde par opération élémentaire et `n = 10^6` :
 
-| Complexity | Time |
+| Complexité | Temps |
 |---|---|
 | `log n` | `19.9 us` |
 | `n` | `1.00 s` |
-| `n^2` | `11.57 days` |
-| `2^n` | about `10^301016` years |
+| `n^2` | `11.57 jours` |
+| `2^n` | environ `10^301016` années |
 
-`log2(10^6) ≈ 19.93`; `(10^6)^2 = 10^12` microseconds, i.e. `10^6` seconds or
-about 11.57 days. `2^(10^6)` is a number with more than 300,000 decimal
-digits: it is far beyond the age of the universe.
+`log2(10^6) ≈ 19.93` ; `(10^6)^2 = 10^12` microsecondes, soit `10^6` secondes ou
+environ 11,57 jours. `2^(10^6)` est un nombre de plus de 300 000 chiffres
+décimaux : il dépasse de très loin l'âge de l'univers.
 
 ### Question 2
 
-The table below is generated by `complexity_table()`, using
-`10^6` operations per second (one microsecond per operation).
+Le tableau ci-dessous est généré par `complexity_table()`, avec `10^6`
+opérations par seconde (une microseconde par opération).
 
-| Complexity | 1 second | 1 minute | 1 hour | 1 day | 1 month | 1 year | 1 century |
+| Complexité | 1 seconde | 1 minute | 1 heure | 1 jour | 1 mois | 1 an | 1 siècle |
 |---|---|---|---|---|---|---|---|
 | `lg n` | `2^1,000,000` | `2^60,000,000` | `2^3,600,000,000` | `2^86,400,000,000` | `2^2,592,000,000,000` | `2^31,536,000,000,000` | `2^3,153,600,000,000,000` |
 | `sqrt(n)` | 1,000 | 7,745 | 60,000 | 293,938 | 1.610e+06 | 5.616e+06 | 5.616e+07 |
@@ -118,84 +122,87 @@ The table below is generated by `complexity_table()`, using
 | `2^n` | 19 | 25 | 31 | 36 | 41 | 44 | 51 |
 | `n!` | 9 | 11 | 12 | 13 | 15 | 16 | 17 |
 
-The `lg n` line is computed as `n = 2^(number of operations)`: the available
-budget is so large that only the symbolic value is meaningful. For `n lg n`,
-the value is obtained by solving `n log2(n) = operations` numerically.
+La ligne `lg n` est calculée comme `n = 2^(nombre d'opérations)` : le budget
+disponible est si grand que seule la valeur symbolique a un sens. Pour
+`n lg n`, la valeur est obtenue en résolvant numériquement
+`n log2(n) = operations`.
 
 ---
 
-## Exercise 4 — Simplifying `O` expressions
+## Exercice 4 — Simplifier les expressions `O`
 
-| # | Simplification | Answer | Can be replaced by `Theta`? |
+| # | Simplification | Réponse | Peut être remplacé par `Theta` ? |
 |---|---|---|---|
-| 1 | `11n^3 = O(n^3)` vs `O(n^2)` | false | no |
-| 2 | `n^13 = O(3^n)` | true | no |
-| 3 | `-2^n = O(log^35 n)` | false | no |
-| 4 | `4n^3 + 12n^2 + 36 = O(n^3)` | true | yes |
-| 5 | `0.01n^5 = O(n^4)` | false | no |
-| 6 | `4^n = O(n^7)` | false | no |
-| 7 | `3n log2 n = O(n)` | false | no |
-| 8 | `23 ln n = O(3^n)` | true | no |
-| 9 | `7n^5 = O(n^5)` | true | yes |
-| 10 | `n^5 = O(7n^5)` | true | yes |
+| 1 | `11n^3 = O(n^3)` vs `O(n^2)` | faux | non |
+| 2 | `n^13 = O(3^n)` | vrai | non |
+| 3 | `-2^n = O(log^35 n)` | faux | non |
+| 4 | `4n^3 + 12n^2 + 36 = O(n^3)` | vrai | oui |
+| 5 | `0.01n^5 = O(n^4)` | faux | non |
+| 6 | `4^n = O(n^7)` | faux | non |
+| 7 | `3n log2 n = O(n)` | faux | non |
+| 8 | `23 ln n = O(3^n)` | vrai | non |
+| 9 | `7n^5 = O(n^5)` | vrai | oui |
+| 10 | `n^5 = O(7n^5)` | vrai | oui |
 
-For a polynomial `P(n)`, only the term of highest degree matters. An
-exponential always dominates a polynomial, and a polynomial always dominates
-a polylogarithm. The three `Theta` replacements are the cases where the two
-sides have exactly the same growth rate (up to a constant factor).
-
----
-
-## Exercise 5 — Complexity of a prime test
-
-`is_prime(n)` performs trial divisions from 2 to `floor(sqrt(n))`:
-
-- worst case: `Theta(sqrt(n))` iterations, each in `O(1)`;
-- so the running time is `O(sqrt(n))`.
-
-If `n` has `d` decimal digits, then `n ≈ 10^d` and `sqrt(n) ≈ 10^(d/2)`:
-the running time grows exponentially with the **number of digits**, i.e.
-linearly with `sqrt(n)`. On a logarithmic time axis, the measured points are
-therefore close to a straight line, which confirms the analysis.
-
-The six numbers of the statement contain up to 19 digits, so their square
-roots have up to `10^9` values: timing all of them would take hours. The
-`measure_prime` helper accepts any list, and the demo uses smaller instances
-while keeping the same asymptotic behaviour.
+Pour un polynôme `P(n)`, seul le terme de plus haut degré compte. Une
+exponentielle domine toujours un polynôme, et un polynôme domine toujours un
+polylogarithme. Les trois remplacements par `Theta` correspondent aux cas où les
+deux membres ont exactement le même taux de croissance (à un facteur constant
+près).
 
 ---
 
-## Exercise 6 — Proving `3n^2 - 100n + 6 = Theta(n^2)`
+## Exercice 5 — Complexité d'un test de primalité
 
-We must exhibit three positive constants `c1`, `c2` and `n0` such that, for
-every `n >= n0`:
+`is_prime(n)` effectue des divisions successives de 2 à `floor(sqrt(n))` :
+
+- pire cas : `Theta(sqrt(n))` itérations, chacune en `O(1)` ;
+- le temps d'exécution est donc en `O(sqrt(n))`.
+
+Si `n` a `d` chiffres décimaux, alors `n ≈ 10^d` et `sqrt(n) ≈ 10^(d/2)` : le
+temps d'exécution croît exponentiellement avec le **nombre de chiffres**,
+c'est-à-dire linéairement avec `sqrt(n)`. Sur un axe des temps logarithmique,
+les points mesurés sont donc proches d'une droite, ce qui confirme l'analyse.
+
+Les six nombres de l'énoncé comportent jusqu'à 19 chiffres, donc leurs racines
+carrées atteignent jusqu'à `10^9` valeurs : mesurer le temps de tous prendrait
+des heures. L'utilitaire `measure_prime` accepte n'importe quelle liste, et la
+démonstration utilise des instances plus petites tout en conservant le même
+comportement asymptotique.
+
+---
+
+## Exercice 6 — Démontrer `3n^2 - 100n + 6 = Theta(n^2)`
+
+Il faut exhiber trois constantes positives `c1`, `c2` et `n0` telles que, pour
+tout `n >= n0` :
 
 ```
 c1 * n^2 <= 3n^2 - 100n + 6 <= c2 * n^2
 ```
 
-**Lower bound.** For `n >= 100`:
+**Borne inférieure.** Pour `n >= 100` :
 
 ```
 3n^2 - 100n + 6 - 2n^2 = n^2 - 100n + 6 = n(n - 100) + 6 >= 6 > 0
 ```
 
-so `3n^2 - 100n + 6 >= 2n^2` with `c1 = 2` and `n0 = 100`.
+donc `3n^2 - 100n + 6 >= 2n^2` avec `c1 = 2` et `n0 = 100`.
 
-**Upper bound.** For `n >= 3`, `6 <= n^2`, hence:
+**Borne supérieure.** Pour `n >= 3`, `6 <= n^2`, donc :
 
 ```
 3n^2 - 100n + 6 <= 3n^2 + 6 <= 4n^2
 ```
 
-with `c2 = 4` and `n0 = 3`.
+avec `c2 = 4` et `n0 = 3`.
 
-Taking `n0 = 100`, both inequalities hold, which proves the `Theta(n^2)`
-bound.
+En prenant `n0 = 100`, les deux inégalités sont vérifiées, ce qui démontre la
+borne `Theta(n^2)`.
 
 ---
 
-## Run it
+## Lancer le code
 
 ```bash
 python -m sda.tp02_complexity.demo

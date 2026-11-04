@@ -1,4 +1,4 @@
-"""Merge sort (TP 4, exercise 2)."""
+"""Tri fusion (TP 4, exercice 2)."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ T = TypeVar("T")
 
 
 def merge(left: list[T], right: list[T]) -> list[T]:
-    """Merge two sorted lists into a new sorted list."""
+    """Fusionne deux listes triées en une nouvelle liste triée."""
     result: list[T] = []
     i = j = 0
     while i < len(left) and j < len(right):
@@ -24,10 +24,10 @@ def merge(left: list[T], right: list[T]) -> list[T]:
 
 
 def merge_sort(items: list[T]) -> list[T]:
-    """Return a new sorted list using the recursive merge sort algorithm.
+    """Renvoie une nouvelle liste triée avec l'algorithme récursif de tri fusion.
 
-    Recurrence: ``T(n) = 2 T(n/2) + Theta(n)``, hence
-    ``T(n) = Theta(n log n)`` by the Master Theorem (case 2).
+    Récurrence : ``T(n) = 2 T(n/2) + Theta(n)``, d'où
+    ``T(n) = Theta(n log n)`` par le théorème maître (cas 2).
     """
     if len(items) <= 1:
         return list(items)

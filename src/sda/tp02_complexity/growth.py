@@ -1,4 +1,4 @@
-"""Asymptotic growth classes for the 15 functions of TP 2, exercise 2."""
+"""Classes de croissance asymptotique pour les 15 fonctions du TP 2, exercice 2."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class ComplexityClass:
-    """A set of functions that all grow at the same asymptotic rate."""
+    """Un ensemble de fonctions qui croissent toutes au même rythme asymptotique."""
 
     theta: str
     members: tuple[str, ...]
@@ -16,9 +16,9 @@ class ComplexityClass:
         return label in self.members
 
 
-# The functions are listed from the slowest to the fastest growth.
-# ``2^(n-1)`` and ``2^n`` only differ by a constant factor and therefore share
-# the same Theta class; the same holds for the three cubic expressions.
+# Les fonctions sont listées de la croissance la plus lente à la plus rapide.
+# ``2^(n-1)`` et ``2^n`` ne diffèrent que d'un facteur constant et partagent donc
+# la même classe Theta ; il en va de même pour les trois expressions cubiques.
 GROWTH_CLASSES: tuple[ComplexityClass, ...] = (
     ComplexityClass("Theta(1)", ("6",)),
     ComplexityClass("Theta(lg lg n)", ("lg lg n",)),
@@ -58,11 +58,11 @@ GROWTH_ORDER: tuple[str, ...] = (
 
 
 def theta_class(label: str) -> str:
-    """Return the Theta class of a function, e.g. ``"Theta(n^2)"``."""
+    """Renvoie la classe Theta d'une fonction, par exemple ``"Theta(n^2)"``."""
     for complexity_class in GROWTH_CLASSES:
         if label in complexity_class:
             return complexity_class.theta
-    raise KeyError(f"unknown function: {label!r}")
+    raise KeyError(f"fonction inconnue : {label!r}")
 
 
 def same_class(first: str, second: str) -> bool:
@@ -70,8 +70,8 @@ def same_class(first: str, second: str) -> bool:
 
 
 def rank(label: str) -> int:
-    """Position of a function in the growth order (0 is the slowest)."""
+    """Position d'une fonction dans l'ordre de croissance (0 est la plus lente)."""
     try:
         return GROWTH_ORDER.index(label)
     except ValueError as error:
-        raise KeyError(f"unknown function: {label!r}") from error
+        raise KeyError(f"fonction inconnue : {label!r}") from error

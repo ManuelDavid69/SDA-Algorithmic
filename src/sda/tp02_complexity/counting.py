@@ -1,10 +1,10 @@
-"""Elementary operation counting for the five programs of TP 2, exercise 1.
+"""Comptage d'opérations élémentaires pour les cinq programmes du TP 2, exercice 1.
 
-The course ignores the loop-control instructions (``range`` and the test that
-keeps the loop variable in range).  We therefore count one operation per
-executed assignment / arithmetic line, which is enough to identify the
-asymptotic class.  Every function also returns the final value of the program
-so that the loop can be checked against its closed form.
+Le cours ignore les instructions de contrôle de boucle (``range`` et le test
+qui maintient la variable de boucle dans les bornes).  On compte donc une
+opération par ligne d'affectation ou d'arithmétique exécutée, ce qui suffit à
+identifier la classe asymptotique.  Chaque fonction renvoie également la valeur
+finale du programme afin de vérifier la boucle par rapport à sa forme close.
 """
 
 from __future__ import annotations
@@ -14,17 +14,17 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Count:
-    """Number of elementary operations and final value of a program."""
+    """Nombre d'opérations élémentaires et valeur finale d'un programme."""
 
     operations: int
     value: int
 
 
 def program1(n: int) -> Count:
-    """Two independent loops of ``n`` iterations: ``T(n) = 2n + 1``."""
+    """Deux boucles indépendantes de ``n`` itérations : ``T(n) = 2n + 1``."""
     if n < 0:
-        raise ValueError("n must be non-negative")
-    test = 0  # 1 operation
+        raise ValueError("n doit être positif ou nul")
+    test = 0  # 1 opération
     operations = 1
     for _ in range(n):
         test = test + 1
@@ -36,10 +36,10 @@ def program1(n: int) -> Count:
 
 
 def program2(n: int) -> Count:
-    """Two nested loops: ``T(n) = n^2 + 1``."""
+    """Deux boucles imbriquées : ``T(n) = n^2 + 1``."""
     if n < 0:
-        raise ValueError("n must be non-negative")
-    test = 0  # 1 operation
+        raise ValueError("n doit être positif ou nul")
+    test = 0  # 1 opération
     operations = 1
     for i in range(n):
         for j in range(n):
@@ -49,13 +49,13 @@ def program2(n: int) -> Count:
 
 
 def program3(n: int) -> Count:
-    """Three operations in the double loop, three in the simple loop.
+    """Trois opérations dans la double boucle, trois dans la boucle simple.
 
     ``T(n) = 3n^2 + 3n + 3``.
     """
     if n < 0:
-        raise ValueError("n must be non-negative")
-    a, b, c = 5, 6, 10  # 3 operations
+        raise ValueError("n doit être positif ou nul")
+    a, b, c = 5, 6, 10  # 3 opérations
     d = 33
     operations = 3
     _ = c
@@ -76,10 +76,10 @@ def program3(n: int) -> Count:
 
 
 def program4(n: int) -> Count:
-    """Halving loop: ``floor(log2 n) + 1`` iterations, two operations each."""
+    """Boucle de division par deux : ``floor(log2 n) + 1`` itérations, deux opérations chacune."""
     if n < 0:
-        raise ValueError("n must be non-negative")
-    i = n  # 1 operation
+        raise ValueError("n doit être positif ou nul")
+    i = n  # 1 opération
     operations = 1
     while i > 0:
         k = 2 + 2
@@ -90,13 +90,13 @@ def program4(n: int) -> Count:
 
 
 def program5(n: int) -> Count:
-    """Triple loop with a constant inner loop.
+    """Triple boucle avec une boucle interne constante.
 
     ``T(n) = 1 + 6 * (1 + 2 + ... + n^2) = 3n^2(n^2 + 1) + 1``.
     """
     if n < 0:
-        raise ValueError("n must be non-negative")
-    total = 0  # 1 operation
+        raise ValueError("n doit être positif ou nul")
+    total = 0  # 1 opération
     operations = 1
     for i in range(1, n * n + 1):
         for _ in range(1, i + 1):
@@ -121,7 +121,7 @@ def program3_formula(n: int) -> int:
 def program4_formula(n: int) -> int:
     if n == 0:
         return 1
-    return 1 + 2 * (n.bit_length())  # floor(log2 n) + 1 iterations
+    return 1 + 2 * (n.bit_length())  # floor(log2 n) + 1 itérations
 
 
 def program5_formula(n: int) -> int:

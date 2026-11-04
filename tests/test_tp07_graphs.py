@@ -1,4 +1,4 @@
-"""Tests for TP 7: graph representation, traversals and graph algorithms."""
+"""Tests du TP 7 : représentation des graphes, parcours et algorithmes de graphes."""
 
 import pytest
 
@@ -116,7 +116,7 @@ def test_eulerian_paths():
     assert path3().eulerian_path() == [1, 2, 3]
     assert path3().eulerian_path()[0] in (1, 3)
     assert star().eulerian_circuit() is None
-    # A star with four leaves has four odd vertices: no Eulerian path.
+    # Une étoile à quatre feuilles a quatre sommets impairs : pas de chemin eulérien.
     assert star().eulerian_path() is None
 
 

@@ -1,4 +1,4 @@
-"""Tests for recursion, Fibonacci, divide and conquer and Hanoi (TP 3)."""
+"""Tests de la récursivité, de Fibonacci, de diviser pour régner et de Hanoi (TP 3)."""
 
 import pytest
 
@@ -106,10 +106,10 @@ def test_hanoi_moves_are_legal():
 
 
 def test_hanoi_text_and_print(capsys):
-    assert hanoi_moves_text(1) == ["Move a disk from peg 1 to peg 3"]
+    assert hanoi_moves_text(1) == ["Déplacer un disque du piquet 1 vers le piquet 3"]
     print_hanoi(2)
     captured = capsys.readouterr().out
-    assert captured.count("Move a disk") == 3
+    assert captured.count("Déplacer un disque") == 3
 
 
 def test_hanoi_rejects_invalid_arguments():

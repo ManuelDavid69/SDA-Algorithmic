@@ -1,4 +1,4 @@
-"""Tests for the stack and the bracket analysis (TP 1, exercise 2)."""
+"""Tests de la pile et de l'analyse de parenthèses (TP 1, exercice 2)."""
 
 import pytest
 
@@ -67,7 +67,7 @@ def test_reports_unexpected_closing_bracket():
     assert report.line == 2
     assert report.column == 3
     assert report.character == "]"
-    assert "unexpected closing" in report.message
+    assert "inattendue" in report.message
 
 
 def test_reports_mismatched_bracket():
@@ -76,7 +76,7 @@ def test_reports_mismatched_bracket():
     assert report.line == 1
     assert report.column == 5
     assert report.character == "]"
-    assert "opened at line 1" in report.message
+    assert "ouvert à la ligne 1" in report.message
 
 
 def test_reports_unclosed_bracket_at_its_own_position():
@@ -85,12 +85,12 @@ def test_reports_unclosed_bracket_at_its_own_position():
     assert report.line == 2
     assert report.column == 3
     assert report.character == "("
-    assert "unclosed" in report.message
+    assert "non fermée" in report.message
 
 
 def test_report_truthiness():
     assert BracketReport(True)
-    assert not BracketReport(False, 1, 1, "(", "unclosed")
+    assert not BracketReport(False, 1, 1, "(", "non fermée")
 
 
 def test_analyse_file(tmp_path):

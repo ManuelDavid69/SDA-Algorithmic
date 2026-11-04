@@ -1,8 +1,8 @@
-"""Candy distribution problem (TP 4, exercise 4).
+"""Problème de distribution de bonbons (TP 4, exercice 4).
 
-Given ``n`` packets of candies and ``m`` children, choose exactly ``m``
-packets so that the difference between the largest and the smallest chosen
-packet is minimal.
+Étant donné ``n`` paquets de bonbons et ``m`` enfants, choisir exactement ``m``
+paquets de sorte que la différence entre le plus grand et le plus petit paquet
+choisi soit minimale.
 """
 
 from __future__ import annotations
@@ -12,10 +12,10 @@ from itertools import combinations
 
 
 def brute_force(packets: Sequence[int], children: int) -> tuple[int, tuple[int, ...]]:
-    """Try every subset of ``children`` packets (exponential approach).
+    """Essaie tous les sous-ensembles de ``children`` paquets (approche exponentielle).
 
-    The number of subsets is ``C(n, m)`` and each one costs ``O(m)`` to
-    evaluate, so the complexity is ``O(C(n, m) * m)``.
+    Le nombre de sous-ensembles est ``C(n, m)`` et chacun coûte ``O(m)`` à
+    évaluer, la complexité est donc ``O(C(n, m) * m)``.
     """
     _validate(packets, children)
     best_difference: int | None = None
@@ -31,12 +31,12 @@ def brute_force(packets: Sequence[int], children: int) -> tuple[int, tuple[int, 
 
 
 def best_distribution(packets: Sequence[int], children: int) -> tuple[int, tuple[int, ...]]:
-    """Efficient solution: sort, then slide a window of ``m`` packets.
+    """Solution efficace : trier, puis faire glisser une fenêtre de ``m`` paquets.
 
-    Sorting costs ``O(n log n)``.  An optimal choice can always be replaced by
-    a block of ``m`` consecutive packets of the sorted list without increasing
-    its spread, so one pass over the ``n - m + 1`` windows finds the answer:
-    the total complexity is ``O(n log n)``.
+    Le tri coûte ``O(n log n)``.  Un choix optimal peut toujours être remplacé
+    par un bloc de ``m`` paquets consécutifs de la liste triée sans augmenter
+    son étendue ; un seul parcours des ``n - m + 1`` fenêtres fournit donc la
+    réponse : la complexité totale est ``O(n log n)``.
     """
     _validate(packets, children)
     ordered = sorted(packets)
@@ -54,8 +54,8 @@ def best_distribution(packets: Sequence[int], children: int) -> tuple[int, tuple
 
 def _validate(packets: Sequence[int], children: int) -> None:
     if children <= 0:
-        raise ValueError("the number of children must be positive")
+        raise ValueError("le nombre d'enfants doit être strictement positif")
     if children > len(packets):
-        raise ValueError("not enough packets for every child")
+        raise ValueError("pas assez de paquets pour chaque enfant")
     if any(packet < 0 for packet in packets):
-        raise ValueError("packet sizes must be non-negative")
+        raise ValueError("les tailles de paquets doivent être positives ou nulles")

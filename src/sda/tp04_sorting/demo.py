@@ -1,4 +1,4 @@
-"""Demonstration of TP 4: sorting algorithms and candy distribution."""
+"""Démonstration du TP 4 : algorithmes de tri et distribution de bonbons."""
 
 from __future__ import annotations
 
@@ -14,31 +14,31 @@ from .thirds import thirds_sort
 def main() -> None:
     random.seed(20251006)
     values = [random.randint(0, 99) for _ in range(20)]
-    print(f"input          : {values}")
-    print(f"selection sort : {selection_sort(list(values))}")
-    print(f"merge sort     : {merge_sort(values)}")
-    print(f"two-thirds sort: {thirds_sort(list(values))}")
+    print(f"entrée           : {values}")
+    print(f"tri par sélection: {selection_sort(list(values))}")
+    print(f"tri fusion       : {merge_sort(values)}")
+    print(f"tri aux deux tiers: {thirds_sort(list(values))}")
 
-    print("\n== Runtime on 400 elements ==")
+    print("\n== Temps d'exécution sur 400 éléments ==")
     large = [random.randint(0, 1000) for _ in range(400)]
     for name, algorithm in (
-        ("selection", selection_sort),
-        ("merge", merge_sort),
-        ("two-thirds", thirds_sort),
+        ("sélection", selection_sort),
+        ("fusion", merge_sort),
+        ("deux tiers", thirds_sort),
     ):
         start = time.perf_counter()
         algorithm(list(large))
         elapsed = time.perf_counter() - start
         print(f"{name:>11}: {elapsed * 1e3:8.2f} ms")
 
-    print("\n== Candy distribution ==")
+    print("\n== Distribution de bonbons ==")
     packets = [7, 3, 2, 9, 12, 5, 8, 4]
     children = 3
-    print(f"packets: {packets}, children: {children}")
+    print(f"paquets : {packets}, enfants : {children}")
     difference, choice = brute_force(packets, children)
-    print(f"brute force : difference {difference}, choice {choice}")
+    print(f"force brute : différence {difference}, choix {choice}")
     difference, choice = best_distribution(packets, children)
-    print(f"sliding window: difference {difference}, choice {choice}")
+    print(f"fenêtre glissante : différence {difference}, choix {choice}")
 
 
 if __name__ == "__main__":

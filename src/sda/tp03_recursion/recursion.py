@@ -1,4 +1,4 @@
-"""Recursive functions of TP 3: displays, Fibonacci and divide and conquer."""
+"""Fonctions récursives du TP 3 : affichages, Fibonacci et diviser pour régner."""
 
 from __future__ import annotations
 
@@ -6,25 +6,25 @@ from collections.abc import Callable, Iterable
 
 
 def numbers_ascending(n: int) -> list[int]:
-    """Return ``[1, 2, ..., n]`` using a recursive definition."""
+    """Renvoie ``[1, 2, ..., n]`` à l'aide d'une définition récursive."""
     if n < 0:
-        raise ValueError("n must be non-negative")
+        raise ValueError("n doit être positif ou nul")
     if n == 0:
         return []
     return numbers_ascending(n - 1) + [n]
 
 
 def numbers_descending(n: int) -> list[int]:
-    """Return ``[n, n-1, ..., 1]`` using a recursive definition."""
+    """Renvoie ``[n, n-1, ..., 1]`` à l'aide d'une définition récursive."""
     if n < 0:
-        raise ValueError("n must be non-negative")
+        raise ValueError("n doit être positif ou nul")
     if n == 0:
         return []
     return [n] + numbers_descending(n - 1)
 
 
 def print_ascending(n: int, output: Callable[[int], None] = print) -> None:
-    """Display the numbers from 1 to ``n`` in increasing order."""
+    """Affiche les nombres de 1 à ``n`` par ordre croissant."""
     if n <= 0:
         return
     print_ascending(n - 1, output)
@@ -32,7 +32,7 @@ def print_ascending(n: int, output: Callable[[int], None] = print) -> None:
 
 
 def print_descending(n: int, output: Callable[[int], None] = print) -> None:
-    """Display the numbers from ``n`` to 1 in decreasing order."""
+    """Affiche les nombres de ``n`` à 1 par ordre décroissant."""
     if n <= 0:
         return
     output(n)
@@ -40,21 +40,21 @@ def print_descending(n: int, output: Callable[[int], None] = print) -> None:
 
 
 def fibonacci1(n: int) -> int:
-    """Naive recursive Fibonacci, with ``F(0) = F(1) = 1``.
+    """Fibonacci récursif naïf, avec ``F(0) = F(1) = 1``.
 
-    The number of calls is exponential: ``T(n) = T(n-1) + T(n-2) + 1``.
+    Le nombre d'appels est exponentiel : ``T(n) = T(n-1) + T(n-2) + 1``.
     """
     if n < 0:
-        raise ValueError("n must be non-negative")
+        raise ValueError("n doit être positif ou nul")
     if n <= 1:
         return 1
     return fibonacci1(n - 1) + fibonacci1(n - 2)
 
 
 def fibonacci2(n: int) -> int:
-    """Memoised Fibonacci: each value is computed once (``O(n)``)."""
+    """Fibonacci mémoïsé : chaque valeur n'est calculée qu'une fois (``O(n)``)."""
     if n < 0:
-        raise ValueError("n must be non-negative")
+        raise ValueError("n doit être positif ou nul")
     cache: dict[int, int] = {0: 1, 1: 1}
 
     def fib(k: int) -> int:
@@ -66,14 +66,15 @@ def fibonacci2(n: int) -> int:
 
 
 def fibonacci3(n: int) -> int:
-    """Tail-recursive Fibonacci with two accumulators.
+    """Fibonacci récursif terminal avec deux accumulateurs.
 
-    The helper carries ``(F(k), F(k+1))`` as ``(a, b)`` and replaces the pair
-    by ``(b, a + b)`` at each call, so the recursion is terminal and uses
-    ``O(n)`` time and ``O(1)`` extra arithmetic state.
+    La fonction auxiliaire transporte ``(F(k), F(k+1))`` sous la forme ``(a, b)``
+    et remplace le couple par ``(b, a + b)`` à chaque appel, de sorte que la
+    récursion est terminale et utilise un temps ``O(n)`` et un état arithmétique
+    supplémentaire ``O(1)``.
     """
     if n < 0:
-        raise ValueError("n must be non-negative")
+        raise ValueError("n doit être positif ou nul")
 
     def fib(k: int, a: int, b: int) -> int:
         if k == 0:
@@ -84,10 +85,10 @@ def fibonacci3(n: int) -> int:
 
 
 def max_list(values: Iterable[int]) -> int:
-    """Maximum of a list, computed with a divide-and-conquer strategy."""
+    """Maximum d'une liste, calculé selon une stratégie de diviser pour régner."""
     items = list(values)
     if not items:
-        raise ValueError("max_list() arg is an empty sequence")
+        raise ValueError("l'argument de max_list() est une séquence vide")
     return _max_range(items, 0, len(items))
 
 

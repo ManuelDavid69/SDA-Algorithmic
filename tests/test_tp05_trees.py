@@ -1,4 +1,4 @@
-"""Tests for TP 5: BST, tree rendering, expression and ternary trees, Akinator."""
+"""Tests du TP 5 : ABR, affichage d'arbres, arbres d'expression et ternaires, Akinator."""
 
 import pytest
 

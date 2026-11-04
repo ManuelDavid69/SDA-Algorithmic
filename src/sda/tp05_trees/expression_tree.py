@@ -1,4 +1,4 @@
-"""Expression trees and reverse Polish notation (TP 5, exercise 2)."""
+"""Arbres d'expression et notation polonaise inverse (TP 5, exercice 2)."""
 
 from __future__ import annotations
 
@@ -14,10 +14,11 @@ _IDENTIFIER = re.compile(r"^[A-Za-z_]\w*$")
 
 @dataclass
 class ExprNode:
-    """A node of an expression tree.
+    """Un nœud d'un arbre d'expression.
 
-    Leaves contain an operand (number or variable); internal nodes contain an
-    operator.  ``neg`` is the unary minus operator, with only a left child.
+    Les feuilles contiennent un opérande (nombre ou variable) ; les nœuds
+    internes contiennent un opérateur. ``neg`` est l'opérateur moins unaire,
+    avec seulement un enfant gauche.
     """
 
     value: str
@@ -30,33 +31,33 @@ class ExprNode:
 
 
 def build_from_rpn(expression: str | Sequence[str]) -> ExprNode:
-    """Build an expression tree from a postfix (RPN) expression."""
+    """Construit un arbre d'expression à partir d'une expression postfixée (RPN)."""
     tokens = expression.split() if isinstance(expression, str) else list(expression)
     if not tokens:
-        raise ValueError("empty expression")
+        raise ValueError("expression vide")
     stack: list[ExprNode] = []
     for token in tokens:
         if token in BINARY_OPERATORS:
             if len(stack) < 2:
-                raise ValueError(f"not enough operands for {token!r}")
+                raise ValueError(f"pas assez d'opérandes pour {token!r}")
             right = stack.pop()
             left = stack.pop()
             stack.append(ExprNode(token, left, right))
         elif token == UNARY_MINUS:
             if not stack:
-                raise ValueError("not enough operands for unary minus")
+                raise ValueError("pas assez d'opérandes pour le moins unaire")
             stack.append(ExprNode(UNARY_MINUS, stack.pop()))
         elif _NUMBER.match(token) or _IDENTIFIER.match(token):
             stack.append(ExprNode(token))
         else:
-            raise ValueError(f"invalid token: {token!r}")
+            raise ValueError(f"jeton invalide : {token!r}")
     if len(stack) != 1:
-        raise ValueError("the expression has leftover operands")
+        raise ValueError("l'expression a des opérandes en trop")
     return stack[0]
 
 
 def evaluate(node: ExprNode, variables: Mapping[str, float] | None = None) -> float | int:
-    """Evaluate an expression tree; variables are looked up in ``variables``."""
+    """Évalue un arbre d'expression ; les variables sont cherchées dans ``variables``."""
     variables = variables or {}
     if node.is_leaf:
         if _NUMBER.match(node.value):
@@ -65,7 +66,7 @@ def evaluate(node: ExprNode, variables: Mapping[str, float] | None = None) -> fl
         try:
             return variables[node.value]
         except KeyError as error:
-            raise KeyError(f"unknown variable: {node.value!r}") from error
+            raise KeyError(f"variable inconnue : {node.value!r}") from error
     if node.value == UNARY_MINUS:
         assert node.left is not None
         return -evaluate(node.left, variables)
@@ -82,11 +83,11 @@ def evaluate(node: ExprNode, variables: Mapping[str, float] | None = None) -> fl
         return left / right
     if node.value == "^":
         return left**right
-    raise ValueError(f"unknown operator: {node.value!r}")
+    raise ValueError(f"opérateur inconnu : {node.value!r}")
 
 
 def to_infix(node: ExprNode) -> str:
-    """Infix traversal with the parentheses needed to keep the structure."""
+    """Parcours infixe avec les parenthèses nécessaires pour conserver la structure."""
     if node.is_leaf:
         return node.value
     if node.value == UNARY_MINUS:
@@ -97,7 +98,7 @@ def to_infix(node: ExprNode) -> str:
 
 
 def to_postfix(node: ExprNode) -> list[str]:
-    """Post-order traversal: the RPN form of the expression."""
+    """Parcours postfixe : la forme RPN de l'expression."""
     if node.is_leaf:
         return [node.value]
     if node.value == UNARY_MINUS:
@@ -114,14 +115,14 @@ def height(node: ExprNode | None) -> int:
 
 
 def evaluate_rpn(expression: str | Sequence[str], variables: Mapping[str, float] | None = None):
-    """Evaluate an RPN expression directly with a stack (no tree needed)."""
+    """Évalue directement une expression RPN avec une pile (sans arbre)."""
     tokens = expression.split() if isinstance(expression, str) else list(expression)
     variables = variables or {}
     stack: list[float] = []
     for token in tokens:
         if token in BINARY_OPERATORS:
             if len(stack) < 2:
-                raise ValueError(f"not enough operands for {token!r}")
+                raise ValueError(f"pas assez d'opérandes pour {token!r}")
             right = stack.pop()
             left = stack.pop()
             if token == "+":
@@ -136,16 +137,16 @@ def evaluate_rpn(expression: str | Sequence[str], variables: Mapping[str, float]
                 stack.append(left**right)
         elif token == UNARY_MINUS:
             if not stack:
-                raise ValueError("not enough operands for unary minus")
+                raise ValueError("pas assez d'opérandes pour le moins unaire")
             stack.append(-stack.pop())
         elif _NUMBER.match(token):
             stack.append(float(token))
         elif _IDENTIFIER.match(token):
             if token not in variables:
-                raise KeyError(f"unknown variable: {token!r}")
+                raise KeyError(f"variable inconnue : {token!r}")
             stack.append(variables[token])
         else:
-            raise ValueError(f"invalid token: {token!r}")
+            raise ValueError(f"jeton invalide : {token!r}")
     if len(stack) != 1:
-        raise ValueError("the expression has leftover operands")
+        raise ValueError("l'expression a des opérandes en trop")
     return stack[0]

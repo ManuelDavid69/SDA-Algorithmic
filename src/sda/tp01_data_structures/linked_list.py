@@ -1,4 +1,4 @@
-"""Singly linked list, written from scratch (TP 1, exercise 1)."""
+"""Liste simplement chaînée, écrite de zéro (TP 1, exercice 1)."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from typing import Any
 
 @dataclass
 class Node:
-    """A node of a singly linked list."""
+    """Un nœud d'une liste simplement chaînée."""
 
     value: Any
     next: Node | None = None
@@ -19,10 +19,11 @@ class Node:
 
 
 class LinkedList:
-    """A singly linked list with a head pointer.
+    """Une liste simplement chaînée avec un pointeur de tête.
 
-    Positions are 0-based.  All operations that walk the list are ``O(k)``
-    (or ``O(n)``); insertion and deletion at the head are ``O(1)``.
+    Les positions sont indexées à partir de 0.  Toutes les opérations qui
+    parcourent la liste sont en ``O(k)`` (ou ``O(n)``) ; l'insertion et la
+    suppression en tête sont en ``O(1)``.
     """
 
     def __init__(self, values: Iterable[Any] | None = None) -> None:
@@ -32,7 +33,7 @@ class LinkedList:
             self.extend(values)
 
     # ------------------------------------------------------------------
-    # Size and representation
+    # Taille et représentation
     # ------------------------------------------------------------------
     def __len__(self) -> int:
         return self._size
@@ -67,10 +68,10 @@ class LinkedList:
         return list(self)
 
     # ------------------------------------------------------------------
-    # Core operations
+    # Opérations principales
     # ------------------------------------------------------------------
     def append(self, value: Any) -> None:
-        """Add ``value`` at the end of the list."""
+        """Ajoute ``value`` à la fin de la liste."""
         node = Node(value)
         if self.head is None:
             self.head = node
@@ -86,9 +87,9 @@ class LinkedList:
             self.append(value)
 
     def insert(self, value: Any, k: int) -> None:
-        """Insert ``value`` at position ``k`` (``0 <= k <= size``)."""
+        """Insère ``value`` à la position ``k`` (``0 <= k <= size``)."""
         if k < 0 or k > self._size:
-            raise IndexError(f"insert position out of range: {k}")
+            raise IndexError(f"position d'insertion hors limites : {k}")
         node = Node(value)
         if k == 0:
             node.next = self.head
@@ -100,7 +101,7 @@ class LinkedList:
         self._size += 1
 
     def delete(self, k: int) -> Any:
-        """Remove and return the value at position ``k``."""
+        """Retire et renvoie la valeur située à la position ``k``."""
         self._check_index(k)
         if k == 0:
             assert self.head is not None
@@ -115,7 +116,7 @@ class LinkedList:
         return removed
 
     def search(self, value: Any) -> int:
-        """Return the index of the first occurrence of ``value``, or ``-1``."""
+        """Renvoie l'indice de la première occurrence de ``value``, ou ``-1``."""
         index = 0
         current = self.head
         while current is not None:
@@ -126,7 +127,7 @@ class LinkedList:
         return -1
 
     def get(self, k: int) -> Any:
-        """Return the value at position ``k``."""
+        """Renvoie la valeur située à la position ``k``."""
         return self._node_at(k).value
 
     def __getitem__(self, k: int) -> Any:
@@ -136,11 +137,11 @@ class LinkedList:
         self._node_at(k).value = value
 
     # ------------------------------------------------------------------
-    # Helpers
+    # Fonctions auxiliaires
     # ------------------------------------------------------------------
     def _check_index(self, k: int) -> None:
         if k < 0 or k >= self._size:
-            raise IndexError(f"list index out of range: {k}")
+            raise IndexError(f"indice de liste hors limites : {k}")
 
     def _node_at(self, k: int) -> Node:
         self._check_index(k)

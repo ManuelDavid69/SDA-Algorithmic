@@ -1,4 +1,4 @@
-"""Sequential and dichotomic search (TP 3, exercise 5)."""
+"""Recherche séquentielle et dichotomique (TP 3, exercice 5)."""
 
 from __future__ import annotations
 
@@ -6,9 +6,9 @@ from collections.abc import Sequence
 
 
 def linear_search(items: Sequence[int], target: int) -> int:
-    """Return the index of ``target``, or ``-1``.
+    """Renvoie l'indice de ``target``, ou ``-1``.
 
-    Worst case ``O(n)``, best case ``O(1)``; the average case is ``O(n)``.
+    Pire cas ``O(n)``, meilleur cas ``O(1)`` ; le cas moyen est ``O(n)``.
     """
     for index, value in enumerate(items):
         if value == target:
@@ -17,9 +17,9 @@ def linear_search(items: Sequence[int], target: int) -> int:
 
 
 def binary_search_recursive(items: Sequence[int], target: int) -> int:
-    """Recursive binary search on a list sorted in increasing order.
+    """Recherche dichotomique récursive sur une liste triée par ordre croissant.
 
-    The recurrence is ``T(n) = T(n/2) + O(1)``, hence ``O(log n)``.
+    La récurrence est ``T(n) = T(n/2) + O(1)``, d'où ``O(log n)``.
     """
     return _binary_search(items, target, 0, len(items) - 1)
 
@@ -36,7 +36,7 @@ def _binary_search(items: Sequence[int], target: int, low: int, high: int) -> in
 
 
 def binary_search_iterative(items: Sequence[int], target: int) -> int:
-    """Iterative version of the same algorithm."""
+    """Version itérative du même algorithme."""
     low, high = 0, len(items) - 1
     while low <= high:
         middle = (low + high) // 2
@@ -49,5 +49,5 @@ def binary_search_iterative(items: Sequence[int], target: int) -> int:
     return -1
 
 
-# Name used in the statement.
+# Nom utilisé dans l'énoncé.
 dicho = binary_search_recursive

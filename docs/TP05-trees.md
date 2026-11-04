@@ -1,32 +1,32 @@
-# TP 5 — Trees
+# TP 5 — Arbres
 
-## Objectives
+## Objectifs
 
-- build a **binary search tree** (BST) with chained nodes, and implement
-  insertion, search and deletion;
-- render a tree as ASCII to check the operations;
-- use **expression trees** to represent and evaluate arithmetic expressions,
-  including reverse Polish notation (RPN);
-- parse nested **ternary expressions** (`a?b:c`);
-- implement a simplified **Akinator** that learns new animals.
+- construire un **arbre binaire de recherche** (ABR) avec des nœuds chaînés, et implémenter
+  l'insertion, la recherche et la suppression ;
+- afficher un arbre en ASCII pour vérifier les opérations ;
+- utiliser des **arbres d'expression** pour représenter et évaluer des expressions
+  arithmétiques, y compris la notation polonaise inverse (RPN) ;
+- analyser des **expressions ternaires** imbriquées (`a?b:c`) ;
+- implémenter un **Akinator** simplifié qui apprend de nouveaux animaux.
 
-The code lives in `src/sda/tp05_trees`:
+Le code se trouve dans `src/sda/tp05_trees` :
 
-| Module | Contents |
+| Module | Contenu |
 |---|---|
-| `bst.py` | `BSTNode`, `BST` (insert, search, delete, traversals, height) |
-| `tree_printer.py` | ASCII rendering of a binary tree |
-| `expression_tree.py` | RPN parser, infix/postfix traversals, evaluator |
-| `ternary.py` | recursive-descent parser for `a?b:c` expressions |
-| `akinator.py` | question/animal tree, interactive game, JSON persistence |
+| `bst.py` | `BSTNode`, `BST` (insertion, recherche, suppression, parcours, hauteur) |
+| `tree_printer.py` | rendu ASCII d'un arbre binaire |
+| `expression_tree.py` | analyseur RPN, parcours infixe/postfixe, évaluateur |
+| `ternary.py` | analyseur descendant récursif pour les expressions `a?b:c` |
+| `akinator.py` | arbre question/animal, jeu interactif, persistance JSON |
 
 ---
 
-## 1. Binary search tree
+## 1. Arbre binaire de recherche
 
-### Insertion sequence
+### Séquence d'insertion
 
-Inserting `25, 60, 35, 10, 5, 20, 65, 45, 70, 40, 50, 55, 30, 15` gives:
+Insérer `25, 60, 35, 10, 5, 20, 65, 45, 70, 40, 50, 55, 30, 15` donne :
 
 ```
 25
@@ -45,16 +45,16 @@ Inserting `25, 60, 35, 10, 5, 20, 65, 45, 70, 40, 50, 55, 30, 15` gives:
         `-- 70
 ```
 
-The in-order traversal is the sorted sequence, which is the defining property
-of a BST.
+Le parcours infixe est la séquence triée, ce qui est la propriété caractéristique
+d'un ABR.
 
-### Deletion
+### Suppression
 
-- deleting **35** (two children): its in-order successor is **40**, the
-  minimum of its right subtree. `40` replaces `35` and is removed from its old
-  position;
-- deleting **25** (two children): its successor is **30**. `30` becomes the
-  new root.
+- supprimer **35** (deux enfants) : son successeur infixe est **40**, le
+  minimum de son sous-arbre droit. `40` remplace `35` et est retiré de son ancienne
+  position ;
+- supprimer **25** (deux enfants) : son successeur est **30**. `30` devient la
+  nouvelle racine.
 
 ```
 30
@@ -71,35 +71,35 @@ of a BST.
         `-- 70
 ```
 
-The three deletion cases are implemented in `BST._delete`:
+Les trois cas de suppression sont implémentés dans `BST._delete` :
 
-1. a leaf is replaced by `None`;
-2. a node with one child is replaced by that child;
-3. a node with two children is replaced by its successor.
+1. une feuille est remplacée par `None` ;
+2. un nœud avec un seul enfant est remplacé par cet enfant ;
+3. un nœud avec deux enfants est remplacé par son successeur.
 
-### Complexity
+### Complexité
 
-| Operation | Complexity |
+| Opération | Complexité |
 |---|---|
-| `insert`, `search`, `delete` | `O(h)`, where `h` is the height |
-| in-order / pre-order / post-order | `O(n)` |
+| `insert`, `search`, `delete` | `O(h)`, où `h` est la hauteur |
+| infixe / préfixe / postfixe | `O(n)` |
 | `height`, `len` | `O(n)` / `O(1)` |
 
-In the worst case (sorted insertions) `h = n - 1` and the operations are
-`O(n)`.  For a randomly built BST the expected height is `O(log n)`, which is
-why balanced variants (AVL, red-black) exist; the AVL tree is implemented in
-TP 6.
+Dans le pire cas (insertions triées) `h = n - 1` et les opérations sont
+`O(n)`.  Pour un ABR construit aléatoirement, la hauteur attendue est `O(log n)`, ce qui
+explique l'existence de variantes équilibrées (AVL, rouge-noir) ; l'arbre AVL est implémenté
+au TP 6.
 
-The test suite replays the insertion and deletion sequence of the statement
-and checks the BST invariant after each deletion.
+La suite de tests rejoue la séquence d'insertion et de suppression de l'énoncé
+et vérifie l'invariant d'ABR après chaque suppression.
 
 ---
 
-## 2. Expression trees and RPN
+## 2. Arbres d'expression et RPN
 
-### Building the tree
+### Construction de l'arbre
 
-The formula `((5 + z) / -8) * (4 ^ 2)` becomes:
+La formule `((5 + z) / -8) * (4 ^ 2)` devient :
 
 ```
           *
@@ -112,76 +112,77 @@ The formula `((5 + z) / -8) * (4 ^ 2)` becomes:
   5   z
 ```
 
-The division node has the constant `-8` as its right child.  There are two
-valid representations of `-8`:
+Le nœud de division a la constante `-8` comme enfant droit.  Il existe deux
+représentations valides de `-8` :
 
-- a **leaf** whose value is the negative constant `-8` (the simplest choice,
-  and the one used by `build_from_rpn` when it reads the token `-8`);
-- a **unary minus node** with the positive leaf `8` as its only child, written
-  `8 neg` in RPN.  This is necessary when the minus sign is an operator
-  applied to a sub-expression rather than part of a literal.
+- une **feuille** dont la valeur est la constante négative `-8` (le choix le plus simple,
+  et celui utilisé par `build_from_rpn` lorsqu'il lit le jeton `-8`) ;
+- un **nœud de moins unaire** avec la feuille positive `8` comme unique enfant, noté
+  `8 neg` en RPN.  Cela est nécessaire lorsque le signe moins est un opérateur
+  appliqué à une sous-expression plutôt que faisant partie d'un littéral.
 
-`build_from_rpn` supports both forms.
+`build_from_rpn` prend en charge les deux formes.
 
-### Infix traversal
+### Parcours infixe
 
-A plain in-order traversal writes:
+Un simple parcours infixe écrit :
 
 ```
 5 + z / -8 * 4 ^ 2
 ```
 
-which is **not** the original formula: without parentheses, the usual
-precedence rules give a different tree.  Parentheses are needed to preserve
-the structure.  `to_infix` therefore adds a pair of parentheses around every
-binary operation and around the unary minus:
+ce qui n'est **pas** la formule d'origine : sans parenthèses, les règles de priorité
+usuelles donnent un arbre différent.  Les parenthèses sont nécessaires pour préserver
+la structure.  `to_infix` ajoute donc une paire de parenthèses autour de chaque
+opération binaire et autour du moins unaire :
 
 ```
 (((5 + z) / (-8)) * (4 ^ 2))
 ```
 
-A precedence-aware printer can omit some of them, but the fully parenthesised
-form is always correct and is the simplest answer to the question.
+Un afficheur tenant compte des priorités peut en omettre certaines, mais la forme
+entièrement parenthésée est toujours correcte et constitue la réponse la plus simple
+à la question.
 
-### Which traversal gives RPN?
+### Quel parcours donne la RPN ?
 
-The **post-order** traversal (left, right, root) gives the reverse Polish
-notation: operands first, then the operator.  For the example:
+Le parcours **postfixe** (gauche, droite, racine) donne la notation polonaise
+inverse : d'abord les opérandes, puis l'opérateur.  Pour l'exemple :
 
 ```
 5 z + 8 neg / 4 2 ^ *
 ```
 
-The test `to_postfix(build_from_rpn(tokens)) == tokens` checks the round trip.
+Le test `to_postfix(build_from_rpn(tokens)) == tokens` vérifie l'aller-retour.
 
-### Evaluating RPN
+### Évaluation de la RPN
 
-Evaluating the post-order traversal with a stack gives the result directly:
+Évaluer le parcours postfixe avec une pile donne directement le résultat :
 
-- a number is pushed;
-- a binary operator pops two values, applies the operation and pushes the
-  result;
-- `neg` pops one value and pushes its opposite.
+- un nombre est empilé ;
+- un opérateur binaire dépile deux valeurs, applique l'opération et empile le
+  résultat ;
+- `neg` dépile une valeur et empile son opposé.
 
-At the end, the stack contains exactly one value: the result.  This is what
-`evaluate_rpn` does; `build_from_rpn` + `evaluate` performs the same
-computation through the tree.  Both return `-16` for `z = 3`.
+À la fin, la pile contient exactement une valeur : le résultat.  C'est ce que fait
+`evaluate_rpn` ; `build_from_rpn` + `evaluate` effectue le même calcul à travers
+l'arbre.  Les deux renvoient `-16` pour `z = 3`.
 
 ---
 
-## 3. Nested ternary expressions
+## 3. Expressions ternaires imbriquées
 
-The grammar is right-associative:
+La grammaire est associée à droite :
 
 ```
 expression := atom ('?' expression ':' expression)?
 atom       := identifier
 ```
 
-With `a?b:c`, the root is the condition `a`, the left child is `b` and the
-right child is `c`.
+Avec `a?b:c`, la racine est la condition `a`, l'enfant gauche est `b` et
+l'enfant droit est `c`.
 
-With `a?b?c:d:e`, the parser attaches the inner ternary to the **then** branch:
+Avec `a?b?c:d:e`, l'analyseur attache le ternaire interne à la branche **alors** :
 
 ```
         a
@@ -191,31 +192,31 @@ With `a?b?c:d:e`, the parser attaches the inner ternary to the **then** branch:
   c     d
 ```
 
-`to_ternary(tree, parenthesize=True)` prints `(a?(b?c:d):e)`, which makes the
-structure explicit.  `evaluate_ternary` resolves the conditions from a
-dictionary and follows the corresponding branch; a leaf that is not a known
-condition is the result of the expression (for example `c`).
+`to_ternary(tree, parenthesize=True)` affiche `(a?(b?c:d):e)`, ce qui rend la
+structure explicite.  `evaluate_ternary` résout les conditions à partir d'un
+dictionnaire et suit la branche correspondante ; une feuille qui n'est pas une condition
+connue est le résultat de l'expression (par exemple `c`).
 
 ---
 
 ## 4. Akinator
 
-The game stores a binary tree:
+Le jeu stocke un arbre binaire :
 
-- an **internal node** contains a yes/no question;
-- a **leaf** contains an animal name.
+- un **nœud interne** contient une question oui/non ;
+- une **feuille** contient un nom d'animal.
 
-The program starts with a single animal (`oiseau`) and asks
+Le programme commence avec un seul animal (`oiseau`) et demande
 `Est-ce un oiseau ?`.
 
-- If the answer is yes, the program has found the animal.
-- If the answer is no, it asks for the name of the new animal, a question that
-  distinguishes it from the old one, and the answer that the new animal would
-  give to that question.  The leaf is replaced by a new question node whose
-  two children are the new animal and the old one.
+- Si la réponse est oui, le programme a trouvé l'animal.
+- Si la réponse est non, il demande le nom du nouvel animal, une question qui
+  le distingue de l'ancien, et la réponse que le nouvel animal donnerait
+  à cette question.  La feuille est remplacée par un nouveau nœud question dont
+  les deux enfants sont le nouvel animal et l'ancien.
 
-For example, after learning `chat` with the question
-`A-t-il des moustaches ?` and the answer `oui`, the tree becomes:
+Par exemple, après avoir appris `chat` avec la question
+`A-t-il des moustaches ?` et la réponse `oui`, l'arbre devient :
 
 ```
 A-t-il des moustaches ?
@@ -223,13 +224,13 @@ A-t-il des moustaches ?
      chat      oiseau
 ```
 
-The tree can be saved to and loaded from JSON, so the program keeps what it
-learned between sessions.  The `play` method accepts injected input/output
-functions, which makes the whole game testable without a terminal.
+L'arbre peut être sauvegardé dans un fichier JSON et chargé depuis celui-ci, de sorte que
+le programme conserve ce qu'il a appris entre les sessions.  La méthode `play` accepte des
+fonctions d'entrée/sortie injectées, ce qui rend tout le jeu testable sans terminal.
 
 ---
 
-## Run it
+## Exécution
 
 ```bash
 python -m sda.tp05_trees.demo

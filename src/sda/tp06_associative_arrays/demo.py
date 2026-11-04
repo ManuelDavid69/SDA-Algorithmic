@@ -1,4 +1,4 @@
-"""Demonstration of TP 6: hash table, AVL tree and vinyl catalogue."""
+"""Démonstration du TP 6 : table de hachage, arbre AVL et catalogue de vinyles."""
 
 from __future__ import annotations
 
@@ -28,41 +28,47 @@ RECORDS = [
 
 
 def main() -> None:
-    print("== Hash table (m = 1009) ==")
+    print("== Table de hachage (m = 1009) ==")
     table = HashTable()
     for key in KEYS:
         probes = table.insert(key, key)
         print(
-            f"{key}: h(k) = {key % 1009:>3}, extra probes = {probes}, "
-            f"slot = {table.slot_of(key)}"
+            f"{key}: h(k) = {key % 1009:>3}, sondages supplémentaires = {probes}, "
+            f"emplacement = {table.slot_of(key)}"
         )
-    print(f"load factor for {len(table)} keys: {table.load_factor:.4f}")
-    print(f"theoretical load factor for 700 keys: {700 / 1009:.4f}")
+    print(f"taux de remplissage pour {len(table)} clés : {table.load_factor:.4f}")
+    print(f"taux de remplissage théorique pour 700 clés : {700 / 1009:.4f}")
 
-    print("\n== Deletion with a DELETED tombstone ==")
+    print("\n== Suppression avec une pierre tombale DELETED ==")
     small = HashTable(size=7)
     for key in (1, 8, 15):
         small.insert(key, key)
-    print("after inserting 1, 8, 15: slots 1, 2 and 3")
+    print("après insertion de 1, 8, 15 : emplacements 1, 2 et 3")
     small.delete(8)
-    print(f"after deleting 8, get(15) = {small.get(15)} (the search skips the tombstone)")
+    print(
+        f"après suppression de 8, get(15) = {small.get(15)} "
+        "(la recherche saute la pierre tombale)"
+    )
     small.insert(22, 22)
-    print(f"inserting 22 reuses slot {small.slot_of(22)}; get(15) still returns {small.get(15)}")
+    print(
+        f"l'insertion de 22 réutilise l'emplacement {small.slot_of(22)} ; "
+        f"get(15) renvoie toujours {small.get(15)}"
+    )
 
-    print("\n== AVL tree ==")
+    print("\n== Arbre AVL ==")
     tree = AVLTree()
     for year in (66, 72, 69, 58, 80, 75):
         tree.insert(year)
-        print(f"insert {year}: rotations = {tree.rotations}, height = {tree.height()}")
+        print(f"insertion de {year} : rotations = {tree.rotations}, hauteur = {tree.height()}")
     print(render_tree(tree.root))
-    print(f"in-order: {tree.in_order()}")
-    print(f"balance factors: {tree.balance_factors()}")
-    print(f"range 60..76: {tree.range_query(60, 76)}")
+    print(f"parcours infixe : {tree.in_order()}")
+    print(f"facteurs d'équilibre : {tree.balance_factors()}")
+    print(f"intervalle 60..76 : {tree.range_query(60, 76)}")
 
-    print("\n== Vinyl Records Co. catalogue ==")
+    print("\n== Catalogue de Vinyl Records Co. ==")
     catalogue = Catalogue(RECORDS)
-    print(f"price of 9782010000000: {catalogue.price('9782010000000')} EUR")
-    print("records published between 1965 and 1975:")
+    print(f"prix de 9782010000000 : {catalogue.price('9782010000000')} EUR")
+    print("fiches publiées entre 1965 et 1975 :")
     for record in catalogue.between(1965, 1975):
         print(f"  {record.year} - {record.artist} - {record.title} ({record.price:.2f} EUR)")
 

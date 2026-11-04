@@ -1,4 +1,4 @@
-"""A simplified Akinator: a tree of questions and animals (TP 5, exercise 4)."""
+"""Un Akinator simplifié : un arbre de questions et d'animaux (TP 5, exercice 4)."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ NO = {"n", "non", "no"}
 
 @dataclass
 class AnimalNode:
-    """A question (two children) or an animal name (a leaf)."""
+    """Une question (deux enfants) ou un nom d'animal (une feuille)."""
 
     text: str
     yes: AnimalNode | None = None
@@ -31,10 +31,10 @@ def default_tree() -> AnimalNode:
 
 @dataclass
 class Akinator:
-    """The guessing game.
+    """Le jeu de devinettes.
 
-    ``input_fn`` and ``output_fn`` are injectable so that the game can be
-    tested without a real terminal.
+    ``input_fn`` et ``output_fn`` sont injectables afin que le jeu puisse être
+    testé sans véritable terminal.
     """
 
     root: AnimalNode = field(default_factory=default_tree)
@@ -116,7 +116,7 @@ class Akinator:
             output_fn("Répondez par o (oui) ou n (non).")
 
     # ------------------------------------------------------------------
-    # Serialisation
+    # Sérialisation
     # ------------------------------------------------------------------
     def to_dict(self) -> dict:
         def convert(node: AnimalNode) -> dict:
@@ -132,11 +132,11 @@ class Akinator:
     def from_dict(cls, data: dict) -> Akinator:
         def convert(payload: dict) -> AnimalNode:
             if not isinstance(payload, dict) or "text" not in payload:
-                raise ValueError("invalid Akinator node")
+                raise ValueError("nœud Akinator invalide")
             yes = convert(payload["yes"]) if payload.get("yes") is not None else None
             no = convert(payload["no"]) if payload.get("no") is not None else None
             if (yes is None) != (no is None):
-                raise ValueError("a question must have exactly two children")
+                raise ValueError("une question doit avoir exactement deux enfants")
             return AnimalNode(str(payload["text"]), yes, no)
 
         return cls(root=convert(data))

@@ -1,4 +1,4 @@
-"""A small graph library used by the graph practical work (TP 7)."""
+"""Une petite bibliothèque de graphes utilisée par les TP de graphes (TP 7)."""
 
 from __future__ import annotations
 
@@ -10,10 +10,11 @@ Vertex = Hashable
 
 
 class Graph:
-    """Adjacency-list graph, undirected by default.
+    """Graphe représenté par listes d'adjacence, non orienté par défaut.
 
-    Vertices can be any hashable value (integers, strings, ...).  Edges carry
-    an optional weight, although most exercises only use the topology.
+    Les sommets peuvent être n'importe quelle valeur hachable (entiers, chaînes,
+    ...). Les arêtes portent un poids optionnel, bien que la plupart des
+    exercices n'utilisent que la topologie.
     """
 
     def __init__(self, directed: bool = False) -> None:
@@ -57,7 +58,7 @@ class Graph:
             neighbours.pop(vertex, None)
 
     # ------------------------------------------------------------------
-    # Basic queries
+    # Requêtes de base
     # ------------------------------------------------------------------
     def __len__(self) -> int:
         return len(self._adj)
@@ -110,7 +111,7 @@ class Graph:
             raise KeyError(vertex)
         return list(self._adj[vertex])
 
-    # Alias with the American spelling used by most libraries.
+    # Alias avec l'orthographe américaine utilisée par la plupart des bibliothèques.
     neighbors = neighbours
 
     def _undirected_neighbours(self, vertex: Vertex) -> set[Vertex]:
@@ -142,7 +143,7 @@ class Graph:
         return next(iter(degrees)) if len(degrees) == 1 else None
 
     # ------------------------------------------------------------------
-    # Matrices and subgraphs
+    # Matrices et sous-graphes
     # ------------------------------------------------------------------
     def adjacency_matrix(self, vertices: list[Vertex] | None = None) -> list[list[int]]:
         vertices = vertices or self.vertices
@@ -187,7 +188,7 @@ class Graph:
 
     def complement(self) -> Graph:
         if self.directed:
-            raise ValueError("complement is only implemented for undirected graphs")
+            raise ValueError("le complément n'est implémenté que pour les graphes non orientés")
         graph = Graph()
         graph.add_vertices(self._adj)
         for position, source in enumerate(self.vertices):
@@ -197,7 +198,7 @@ class Graph:
         return graph
 
     # ------------------------------------------------------------------
-    # Traversals and connectivity
+    # Parcours et connectivité
     # ------------------------------------------------------------------
     def bfs(self, start: Vertex) -> list[Vertex]:
         if start not in self._adj:
@@ -312,7 +313,7 @@ class Graph:
         return any(vertex not in visited and visit(vertex, None) for vertex in self._adj)
 
     # ------------------------------------------------------------------
-    # Eulerian trails
+    # Chaînes eulériennes
     # ------------------------------------------------------------------
     def _non_isolated(self) -> list[Vertex]:
         return [vertex for vertex in self._adj if self.degree(vertex) > 0]
@@ -397,7 +398,7 @@ class Graph:
         return circuit
 
     # ------------------------------------------------------------------
-    # Colouring, independent sets, covers, matching
+    # Coloration, ensembles indépendants, couvertures, couplage
     # ------------------------------------------------------------------
     def greedy_coloring(self) -> dict[Vertex, int]:
         colors: dict[Vertex, int] = {}
@@ -500,7 +501,7 @@ class Graph:
         return cover
 
     # ------------------------------------------------------------------
-    # Isomorphism (small graphs)
+    # Isomorphisme (petits graphes)
     # ------------------------------------------------------------------
     def is_isomorphic(self, other: Graph) -> bool:
         if self.directed != other.directed:

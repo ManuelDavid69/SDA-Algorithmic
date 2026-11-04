@@ -1,4 +1,4 @@
-"""Tests for the sorting algorithms and the candy distribution (TP 4)."""
+"""Tests des algorithmes de tri et de la distribution de bonbons (TP 4)."""
 
 import random
 
@@ -41,7 +41,7 @@ def test_merge_sort(items):
     original = list(items)
     result = merge_sort(items)
     assert result == sorted(original)
-    assert items == original  # merge sort builds a new list
+    assert items == original  # le tri fusion construit une nouvelle liste
 
 
 @pytest.mark.parametrize("items", _random_lists())

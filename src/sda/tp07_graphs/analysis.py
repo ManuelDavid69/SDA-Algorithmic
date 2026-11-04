@@ -1,4 +1,4 @@
-"""Written answers to the graph TD, computed on the graphs of the statement."""
+"""Réponses écrites du TD de graphes, calculées sur les graphes de l'énoncé."""
 
 from __future__ import annotations
 
@@ -71,7 +71,7 @@ def envelope_report() -> dict:
 
 
 def ambassadors_possible(people: int, acquaintances: int) -> bool:
-    """Handshake lemma: the sum of the degrees must be even."""
+    """Lemme des poignées de main : la somme des degrés doit être paire."""
     return (people * acquaintances) % 2 == 0
 
 

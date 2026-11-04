@@ -1,61 +1,62 @@
-# TP 7 — Graphs: basic notions
+# TP 7 — Graphes : notions de base
 
-## Objectives
+## Objectifs
 
-- represent a graph with an adjacency list, and build its adjacency and
-  incidence matrices;
-- compute degrees, neighbourhoods, induced subgraphs and regularity;
-- traversals (BFS/DFS), connected components and bipartiteness;
-- Eulerian circuits and trails;
-- greedy and exact colouring, independent sets, matchings and covers;
-- apply these notions to the Petersen graph, a timetable, an envelope, the
-  ambassador problem and the museum/castle plans.
+- représenter un graphe à l'aide d'une liste d'adjacence, et construire ses
+  matrices d'adjacence et d'incidence ;
+- calculer les degrés, les voisinages, les sous-graphes induits et la régularité ;
+- parcours (BFS/DFS), composantes connexes et bipartisme ;
+- circuits et chaînes eulérien(ne)s ;
+- coloration gloutonne et exacte, ensembles indépendants, couplages et couvertures ;
+- appliquer ces notions au graphe de Petersen, à un emploi du temps, à une
+  enveloppe, au problème des ambassadeurs et aux plans du musée et du château.
 
-The library is in `src/sda/tp07_graphs`:
+La bibliothèque se trouve dans `src/sda/tp07_graphs` :
 
-| Module | Contents |
+| Module | Contenu |
 |---|---|
-| `graph.py` | `Graph` and all the algorithms |
-| `examples.py` | Petersen graph, envelope, language timetable |
-| `analysis.py` | the answers of the TD, computed from the graphs |
+| `graph.py` | `Graph` et tous les algorithmes |
+| `examples.py` | graphe de Petersen, enveloppe, emploi du temps des langues |
+| `analysis.py` | les réponses du TD, calculées à partir des graphes |
 
-The TD is mostly theoretical.  The graphs that are fully specified in the
-statement (Petersen, the language timetable, the envelope) are encoded in
-`examples.py`; the two picture-only exercises (museum and five rooms) are
-solved by the generic algorithms once their plan is encoded as edges.
+Le TD est essentiellement théorique. Les graphes entièrement spécifiés dans
+l'énoncé (Petersen, l'emploi du temps des langues, l'enveloppe) sont encodés dans
+`examples.py` ; les deux exercices fournis uniquement sous forme d'image (le
+musée et les cinq pièces) sont résolus par les algorithmes génériques une fois
+leur plan encodé sous forme d'arêtes.
 
 ---
 
-## Exercise 1 — The Petersen graph
+## Exercice 1 — Le graphe de Petersen
 
-### a) Oriented or not?
+### a) Orienté ou non ?
 
-Undirected.  The edges are symmetric: if `6` is adjacent to `7`, then `7` is
-adjacent to `6`; no arrow is drawn.
+Non orienté. Les arêtes sont symétriques : si `6` est adjacent à `7`, alors `7`
+est adjacent à `6` ; aucune flèche n'est dessinée.
 
-### b) Vertices and edges
+### b) Sommets et arêtes
 
-Vertices: `1, 2, ..., 10`.  Edges (15):
+Sommets : `1, 2, ..., 10`. Arêtes (15) :
 
 ```
-6-7, 7-8, 8-9, 9-10, 10-6          (outer pentagon)
-6-1, 7-2, 8-3, 9-4, 10-5          (spokes)
-1-3, 3-5, 5-2, 2-4, 4-1           (inner pentagram)
+6-7, 7-8, 8-9, 9-10, 10-6          (pentagone extérieur)
+6-1, 7-2, 8-3, 9-4, 10-5          (rayons)
+1-3, 3-5, 5-2, 2-4, 4-1           (pentagramme intérieur)
 ```
 
-### c) Neighbours of 2, degree of 10
+### c) Voisins de 2, degré de 10
 
-`N(2) = {4, 5, 7}` (spoke `2-7`, star edges `2-4` and `2-5`).
+`N(2) = {4, 5, 7}` (rayon `2-7`, arêtes en étoile `2-4` et `2-5`).
 
-`deg(10) = 3` (neighbours `6`, `9` and `5`).
+`deg(10) = 3` (voisins `6`, `9` et `5`).
 
-### d) Regular?
+### d) Régulier ?
 
-Yes: every vertex has degree 3, so the graph is **3-regular** (cubic).
+Oui : chaque sommet a pour degré 3, donc le graphe est **3-régulier** (cubique).
 
 ### e) Matrices
 
-Adjacency matrix (rows/columns `1..10`):
+Matrice d'adjacence (lignes/colonnes `1..10`) :
 
 ```
 0 0 1 1 0 1 0 0 0 0
@@ -70,45 +71,45 @@ Adjacency matrix (rows/columns `1..10`):
 0 0 0 0 1 1 0 0 1 0
 ```
 
-The incidence matrix has 10 rows (vertices) and 15 columns (edges); each
-column contains exactly two `1`s, at the endpoints of the edge.  Both
-matrices are produced by `graph.adjacency_matrix()` and
-`graph.incidence_matrix()` in `petersen_report()`.
+La matrice d'incidence a 10 lignes (sommets) et 15 colonnes (arêtes) ; chaque
+colonne contient exactement deux `1`, aux extrémités de l'arête. Les deux
+matrices sont produites par `graph.adjacency_matrix()` et
+`graph.incidence_matrix()` dans `petersen_report()`.
 
-### f) Induced subgraph on `{1, 3, 5, 6, 7, 8}`
+### f) Sous-graphe induit sur `{1, 3, 5, 6, 7, 8}`
 
-The induced edges are:
+Les arêtes induites sont :
 
 ```
 1-3, 1-6, 3-5, 3-8, 6-7, 7-8
 ```
 
-It has 6 vertices and 6 edges: a 5-cycle `1-3-8-7-6-1` with the pendant vertex
-`5` attached to `3`.  Degrees: `deg(1)=2`, `deg(3)=3`, `deg(5)=1`,
+Il possède 6 sommets et 6 arêtes : un cycle de longueur 5 `1-3-8-7-6-1` avec le
+sommet pendant `5` rattaché à `3`. Degrés : `deg(1)=2`, `deg(3)=3`, `deg(5)=1`,
 `deg(6)=2`, `deg(7)=2`, `deg(8)=2`.
 
-### g) Planar?
+### g) Planaire ?
 
-No.  The Petersen graph is the classical example of a non-planar graph: it
-contains a subdivision of `K3,3` (Kuratowski's theorem).  It is also the
-smallest bridgeless cubic non-planar graph.
+Non. Le graphe de Petersen est l'exemple classique de graphe non planaire : il
+contient une subdivision de `K3,3` (théorème de Kuratowski). C'est également le
+plus petit graphe cubique non planaire sans pont.
 
 ### Bonus
 
-| Quantity | Value |
+| Quantité | Valeur |
 |---|---|
-| Chromatic number | 3 |
-| Independence number | 4 |
-| Maximum matching | 5 |
-| Minimum vertex cover | 6 |
+| Nombre chromatique | 3 |
+| Nombre d'indépendance | 4 |
+| Couplage maximum | 5 |
+| Couverture de sommets minimum | 6 |
 
 ---
 
-## Exercise 2 — Language timetable
+## Exercice 2 — Emploi du temps des langues
 
-Data:
+Données :
 
-| Student | Courses |
+| Étudiant | Cours |
 |---|---|
 | Axel | anglais, espagnol |
 | Béatrice | russe, grec |
@@ -116,21 +117,21 @@ Data:
 | Dylan | russe, espagnol |
 | Emilie | anglais, russe |
 
-### a) Graph and nature
+### a) Graphe et nature
 
-The natural representation is a **bipartite graph**: students on one side,
-courses on the other, and an edge `(student, course)` when the student takes
-the course.  No edge joins two students or two courses, so the graph is
-bipartite by construction.
+La représentation naturelle est un **graphe biparti** : les étudiants d'un côté,
+les cours de l'autre, et une arête `(étudiant, cours)` lorsque l'étudiant suit
+le cours. Aucune arête ne relie deux étudiants ou deux cours, donc le graphe est
+biparti par construction.
 
-A second useful graph is the **student graph**: two students are adjacent
-when they share at least one course.  It is not bipartite (for example
-`Axel - Corentin - Emilie - Axel` is a triangle).
+Un second graphe utile est le **graphe des étudiants** : deux étudiants sont
+adjacents lorsqu'ils partagent au moins un cours. Il n'est pas biparti (par
+exemple `Axel - Corentin - Emilie - Axel` est un triangle).
 
-### b) Possible pairs
+### b) Paires possibles
 
-Two students form a pair when they share at least one course.  The seven
-pairs are:
+Deux étudiants forment une paire lorsqu'ils partagent au moins un cours. Les
+sept paires sont :
 
 ```
 Axel-Corentin, Axel-Dylan, Axel-Emilie,
@@ -138,15 +139,15 @@ Béatrice-Dylan, Béatrice-Emilie,
 Corentin-Emilie, Dylan-Emilie
 ```
 
-### c) Largest group with no common course
+### c) Plus grand groupe sans cours commun
 
-At most **2**.  Example: `{Axel, Béatrice}` (Axel takes anglais/espagnol,
-Béatrice russe/grec); `{Corentin, Dylan}` is another.  There is no independent
-set of size 3 in the student graph.
+Au plus **2**. Exemple : `{Axel, Béatrice}` (Axel suit anglais/espagnol,
+Béatrice russe/grec) ; `{Corentin, Dylan}` en est un autre. Il n'existe pas
+d'ensemble indépendant de taille 3 dans le graphe des étudiants.
 
-### d) Message diffusion
+### d) Diffusion du message
 
-Yes.  The bipartite student-course graph is connected.  For example:
+Oui. Le graphe biparti étudiant-cours est connexe. Par exemple :
 
 ```
 grec -- Béatrice -- russe -- Dylan -- espagnol
@@ -154,181 +155,189 @@ grec -- Béatrice -- russe -- Dylan -- espagnol
                     Emilie -- anglais -- Corentin -- italien
 ```
 
-The message can therefore travel from any course to any other course through
-students.
+Le message peut donc circuler de n'importe quel cours vers n'importe quel autre
+cours en passant par des étudiants.
 
-### e) Timetable
+### e) Emploi du temps
 
-Build the **course conflict graph**: two courses are adjacent when at least
-one student takes both.  Its edges are:
+Construire le **graphe de conflits des cours** : deux cours sont adjacents
+lorsqu'au moins un étudiant suit les deux. Ses arêtes sont :
 
 ```
 anglais-espagnol, anglais-italien, anglais-russe,
 russe-espagnol, russe-grec
 ```
 
-It is 3-colourable, and 3 colours are necessary (the triangle
-`anglais-espagnol-russe`).  So:
+Il est 3-colorable et 3 couleurs sont nécessaires (le triangle
+`anglais-espagnol-russe`). Ainsi :
 
-- at most **3 courses** can be placed in the same slot;
-- **3 slots** are necessary and sufficient.
+- au plus **3 cours** peuvent être placés dans le même créneau ;
+- **3 créneaux** sont nécessaires et suffisants.
 
-One valid assignment:
+Une affectation valide :
 
-| Slot | Courses |
+| Créneau | Cours |
 |---|---|
 | 1 | anglais, grec |
 | 2 | russe, italien |
 | 3 | espagnol |
 
-Check: anglais and grec share no student; russe and italien share none.
+Vérification : anglais et grec ne partagent aucun étudiant ; russe et italien
+non plus.
 
 ---
 
-## Exercise 3 — The envelope
+## Exercice 3 — L'enveloppe
 
-The five intersection points are the vertices `T` (top), `UL`, `UR`, `LL`,
-`LR`.  The graph has 8 edges and the following degrees:
+Les cinq points d'intersection sont les sommets `T` (haut), `UL`, `UR`, `LL`,
+`LR`. Le graphe possède 8 arêtes et les degrés suivants :
 
-| Vertex | T | UL | UR | LL | LR |
+| Sommet | T | UL | UR | LL | LR |
 |---|---|---|---|---|---|
-| Degree | 2 | 4 | 4 | 3 | 3 |
+| Degré | 2 | 4 | 4 | 3 | 3 |
 
-### a) Ending at the starting point?
+### a) Se terminer au point de départ ?
 
-No.  An Eulerian **circuit** requires every vertex to have even degree; `LL`
-and `LR` are odd.
+Non. Un **circuit** eulérien exige que chaque sommet ait un degré pair ; `LL` et
+`LR` sont impairs.
 
-### b) Without necessarily ending at the start?
+### b) Sans nécessairement finir au départ ?
 
-Yes.  There are exactly two odd vertices, which is the necessary and
-sufficient condition for an Eulerian **trail**.  One must start at one odd
-vertex and finish at the other.  For example:
+Oui. Il y a exactement deux sommets impairs, ce qui est la condition nécessaire
+et suffisante pour une **chaîne** eulérienne. Il faut partir de l'un des sommets
+impairs et terminer à l'autre. Par exemple :
 
 ```
 LL -> UL -> T -> UR -> UL -> LR -> UR -> LL -> LR
 ```
 
-This uses each of the 8 edges exactly once; the reverse path is also valid.
+Ce parcours utilise chacune des 8 arêtes exactement une fois ; le chemin inverse
+est également valide.
 
 ---
 
-## Exercise 4 — Isomorphic graphs
+## Exercice 4 — Graphes isomorphes
 
-Both drawings have 10 vertices and are 3-regular, like the Petersen graph, so
-the degree sequence alone cannot decide.  The right-hand drawing is the usual
-Petersen embedding (outer pentagon, inner pentagram, five spokes).  To decide
-for the left-hand drawing, encode its edge list and call:
+Les deux dessins ont 10 sommets et sont 3-réguliers, comme le graphe de Petersen,
+donc la suite des degrés ne suffit pas à décider. Le dessin de droite est le
+plongement habituel de Petersen (pentagone extérieur, pentagramme intérieur,
+cinq rayons). Pour décider pour le dessin de gauche, encoder sa liste d'arêtes et
+appeler :
 
 ```python
 left = Graph.from_edges([...])
 left.is_isomorphic(petersen_graph())
 ```
 
-`Graph.is_isomorphic` checks the degree sequence, then searches for a
-bijection that preserves adjacency (small graphs only).  A quicker
-hand-written invariant is the **girth**: Petersen has girth 5; a drawing that
-contains a triangle or a 4-cycle cannot be isomorphic to it.
+`Graph.is_isomorphic` vérifie la suite des degrés, puis cherche une bijection qui
+préserve l'adjacence (petits graphes uniquement). Un invariant plus rapide à
+calculer à la main est la **maille** : Petersen a une maille de 5 ; un dessin qui
+contient un triangle ou un cycle de longueur 4 ne peut pas lui être isomorphe.
 
 ---
 
-## Exercise 5 — Reception at the embassy
+## Exercice 5 — Réception à l'ambassade
 
-The handshake lemma says that the sum of all degrees is twice the number of
-edges, hence **even**.
+Le lemme des poignées de main dit que la somme de tous les degrés vaut deux fois
+le nombre d'arêtes, donc est **paire**.
 
-### a) 48 ambassadors?
+### a) 48 ambassadeurs ?
 
-If the 48 people present each know exactly 11 others, the degree sum is
-`48 * 11 = 528`, which is even: parity does not rule it out, and an
-11-regular graph on 48 vertices exists, so the claim is possible.
+Si les 48 personnes présentes connaissent chacune exactement 11 autres personnes,
+la somme des degrés vaut `48 * 11 = 528`, qui est paire : la parité ne l'exclut
+pas, et un graphe 11-régulier sur 48 sommets existe, donc l'affirmation est
+possible.
 
-If the host is a 49th participant (the wording "48 homologues" suggests this),
-the sum is `49 * 11 = 539`, which is odd: impossible.  The rest of the
-exercise (47 homologues) indicates that the intended total is 48 people; the
-ambiguity is worth mentioning.
+Si l'hôte est un 49e participant (la formulation « 48 homologues » le suggère),
+la somme vaut `49 * 11 = 539`, qui est impaire : impossible. La suite de
+l'exercice (47 homologues) indique que le total visé est de 48 personnes ;
+l'ambiguïté mérite d'être signalée.
 
-### b) One guest absent
+### b) Un invité absent
 
-With 48 people, the sum is even; with 47 people it is `47 * 11 = 517`, odd, so
-the claim is **impossible**.  This is the parity argument the exercise is
-after.
+Avec 48 personnes, la somme est paire ; avec 47 personnes elle vaut
+`47 * 11 = 517`, impaire, donc l'affirmation est **impossible**. C'est
+l'argument de parité que recherche l'exercice.
 
-### c) Handshakes
+### c) Poignées de main
 
-With 48 ambassadors, each greets the other 47, and each handshake is counted
-twice:
+Avec 48 ambassadeurs, chacun salue les 47 autres, et chaque poignée de main est
+comptée deux fois :
 
 ```
 C(48, 2) = 48 * 47 / 2 = 1128
 ```
 
-`ambassadors_report()` returns these checks; `ambassadors_possible(n, 11)`
-implements the parity test.
+`ambassadors_report()` renvoie ces vérifications ; `ambassadors_possible(n, 11)`
+implémente le test de parité.
 
 ---
 
-## Exercise 6 — A night at the museum
+## Exercice 6 — Une nuit au musée
 
-Encode each room as a vertex and each corridor as an edge.
+Encoder chaque salle comme un sommet et chaque couloir comme une arête.
 
-- A guard placed **in a corridor** covers the two rooms at its endpoints.
-  The set of chosen corridors must touch every vertex: this is a **minimum
-  edge cover**.  For a graph without isolated vertices,
-  `|edge cover| = n - |maximum matching|`.
-- A guard placed **in a room** covers all corridors incident to that room.
-  The set of chosen rooms must touch every edge: this is a **minimum vertex
-  cover**.  By complementarity with independent sets,
-  `|vertex cover| = n - |maximum independent set|`.
+- Un gardien placé **dans un couloir** couvre les deux salles situées à ses
+  extrémités. L'ensemble des couloirs choisis doit toucher chaque sommet : c'est
+  une **couverture d'arêtes minimum**. Pour un graphe sans sommet isolé,
+  `|couverture d'arêtes| = n - |couplage maximum|`.
+- Un gardien placé **dans une salle** couvre tous les couloirs incidents à cette
+  salle. L'ensemble des salles choisies doit toucher chaque arête : c'est une
+  **couverture de sommets minimum**. Par complémentarité avec les ensembles
+  indépendants, `|couverture de sommets| = n - |ensemble indépendant maximum|`.
 
-Once the plan is encoded:
+Une fois le plan encodé :
 
 ```python
 museum = Graph.from_edges([...])
-len(museum.min_edge_cover())   # guards in corridors
-len(museum.min_vertex_cover()) # guards in rooms
+len(museum.min_edge_cover())   # gardiens dans les couloirs
+len(museum.min_vertex_cover()) # gardiens dans les salles
 ```
 
-The two numbers generally differ: an edge cover can be smaller because one
-corridor covers two rooms at once, while a room-guard covers several
-corridors.
+Les deux nombres diffèrent généralement : une couverture d'arêtes peut être plus
+petite parce qu'un couloir couvre deux salles à la fois, tandis qu'un gardien
+posté dans une salle couvre plusieurs couloirs.
 
 ---
 
-## Exercise 7 — The five rooms
+## Exercice 7 — Les cinq pièces
 
-Model the five rooms **and the outside garden** as vertices, and each door as
-an edge between the two places it connects.  The question "pass exactly once
-through each door" is exactly an **Eulerian trail** problem:
+Modéliser les cinq pièces **et le jardin extérieur** comme des sommets, et chaque
+porte comme une arête entre les deux lieux qu'elle relie. La question « passer
+exactement une fois par chaque porte » est exactement un problème de **chaîne
+eulérienne** :
 
-- if every vertex has even degree, an Eulerian circuit exists (start anywhere);
-- if exactly two vertices have odd degree, an Eulerian trail exists (start at
-  one odd vertex and finish at the other);
-- if there are more than two odd vertices, no such walk exists.
+- si chaque sommet a un degré pair, un circuit eulérien existe (partir de
+  n'importe où) ;
+- si exactement deux sommets ont un degré impair, une chaîne eulérienne existe
+  (partir de l'un des sommets impairs et terminer à l'autre) ;
+- s'il y a plus de deux sommets impairs, une telle marche n'existe pas.
 
-`Graph.eulerian_circuit()` and `Graph.eulerian_path()` implement the test and
-the Hierholzer construction.  The printed plan only has to be encoded as an
-edge list; the degree parity immediately gives the answer.
-
----
-
-## Implementation notes
-
-- `Graph` uses an adjacency dictionary `vertex -> {neighbour: weight}`;
-  undirected edges are stored in both directions.
-- `edges()` returns each undirected edge once, `adjacency_matrix()` is
-  symmetric and `incidence_matrix()` puts two `1`s per undirected edge.
-- BFS/DFS and connected components are `O(V + E)`.
-- Eulerian trails use Hierholzer's algorithm in `O(V + E)` after the degree
-  check.
-- Colouring is exponential in the worst case (backtracking), but the graphs
-  of the TD are tiny.  `greedy_coloring()` gives an upper bound quickly.
-- Matchings and independent sets use branch-and-bound/backtracking, suitable
-  for the 10-vertex graphs of the exercises.
+`Graph.eulerian_circuit()` et `Graph.eulerian_path()` implémentent le test et la
+construction de Hierholzer. Il suffit d'encoder le plan imprimé sous forme de
+liste d'arêtes ; la parité des degrés donne immédiatement la réponse.
 
 ---
 
-## Run it
+## Notes d'implémentation
+
+- `Graph` utilise un dictionnaire d'adjacence `sommet -> {voisin: poids}` ; les
+  arêtes non orientées sont stockées dans les deux sens.
+- `edges()` renvoie chaque arête non orientée une seule fois, `adjacency_matrix()`
+  est symétrique et `incidence_matrix()` place deux `1` par arête non orientée.
+- BFS/DFS et les composantes connexes sont en `O(V + E)`.
+- Les chaînes eulériennes utilisent l'algorithme de Hierholzer en `O(V + E)`
+  après la vérification des degrés.
+- La coloration est exponentielle dans le pire cas (retour sur trace), mais les
+  graphes du TD sont minuscules. `greedy_coloring()` fournit rapidement une
+  borne supérieure.
+- Les couplages et les ensembles indépendants utilisent une recherche par
+  séparation et évaluation (branch-and-bound) / retour sur trace, adaptée aux
+  graphes à 10 sommets des exercices.
+
+---
+
+## Exécution
 
 ```bash
 python -m sda.tp07_graphs.demo

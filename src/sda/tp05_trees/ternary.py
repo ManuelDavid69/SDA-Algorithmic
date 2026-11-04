@@ -1,6 +1,6 @@
-"""Parser and evaluator for nested ternary expressions (TP 5, exercise 3).
+"""Analyseur et évaluateur d'expressions ternaires imbriquées (TP 5, exercice 3).
 
-Grammar (right-associative)::
+Grammaire (associative à droite) ::
 
     expression := atom ('?' expression ':' expression)?
     atom       := identifier
@@ -17,7 +17,7 @@ _IDENTIFIER = re.compile(r"[A-Za-z_]\w*")
 
 @dataclass
 class TernaryNode:
-    """A ternary node: ``value ? left : right``."""
+    """Un nœud ternaire : ``value ? left : right``."""
 
     value: str
     left: TernaryNode | None = None
@@ -37,7 +37,7 @@ class _Parser:
         node = self._expression()
         self._skip_spaces()
         if self.position != len(self.text):
-            raise ValueError(f"unexpected character at position {self.position}")
+            raise ValueError(f"caractère inattendu à la position {self.position}")
         return node
 
     def _expression(self) -> TernaryNode:
@@ -49,7 +49,7 @@ class _Parser:
         when_true = self._expression()
         self._skip_spaces()
         if self._peek() != ":":
-            raise ValueError(f"expected ':' at position {self.position}")
+            raise ValueError(f"':' attendu à la position {self.position}")
         self.position += 1
         when_false = self._expression()
         return TernaryNode(condition.value, when_true, when_false)
@@ -58,7 +58,7 @@ class _Parser:
         self._skip_spaces()
         match = _IDENTIFIER.match(self.text, self.position)
         if match is None:
-            raise ValueError(f"expected an identifier at position {self.position}")
+            raise ValueError(f"identifiant attendu à la position {self.position}")
         self.position = match.end()
         return TernaryNode(match.group())
 
@@ -73,14 +73,14 @@ class _Parser:
 
 
 def parse_ternary(text: str) -> TernaryNode:
-    """Parse an expression such as ``a?b:c`` or ``a?b?c:d:e``."""
+    """Analyse une expression telle que ``a?b:c`` ou ``a?b?c:d:e``."""
     if not text.strip():
-        raise ValueError("empty expression")
+        raise ValueError("expression vide")
     return _Parser(text).parse()
 
 
 def evaluate_ternary(node: TernaryNode, variables: Mapping[str, bool]) -> bool | str:
-    """Evaluate a ternary expression using a mapping of conditions."""
+    """Évalue une expression ternaire à l'aide d'une correspondance de conditions."""
     if node.is_leaf:
         if node.value in variables:
             return variables[node.value]
@@ -88,10 +88,10 @@ def evaluate_ternary(node: TernaryNode, variables: Mapping[str, bool]) -> bool |
             return True
         if node.value in ("false", "False"):
             return False
-        # A leaf can also be the result of the expression, e.g. the 'c' of
-        # ``a?b:c``: in that case its name is the value of the expression.
+        # Une feuille peut aussi être le résultat de l'expression, par exemple le
+        # 'c' de ``a?b:c`` : dans ce cas, son nom est la valeur de l'expression.
         return node.value
-    # The condition is an atom: resolve it directly.
+    # La condition est un atome : on la résout directement.
     if node.value in variables:
         condition = variables[node.value]
     elif node.value in ("true", "True"):
@@ -99,14 +99,14 @@ def evaluate_ternary(node: TernaryNode, variables: Mapping[str, bool]) -> bool |
     elif node.value in ("false", "False"):
         condition = False
     else:
-        raise KeyError(f"unknown variable: {node.value!r}")
+        raise KeyError(f"variable inconnue : {node.value!r}")
     branch = node.left if condition else node.right
     assert branch is not None
     return evaluate_ternary(branch, variables)
 
 
 def to_ternary(node: TernaryNode, parenthesize: bool = False) -> str:
-    """Reconstruct the expression; parentheses preserve the tree structure."""
+    """Reconstruit l'expression ; les parenthèses préservent la structure de l'arbre."""
     if node.is_leaf:
         return node.value
     assert node.left is not None and node.right is not None

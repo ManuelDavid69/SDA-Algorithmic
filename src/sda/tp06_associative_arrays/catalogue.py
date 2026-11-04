@@ -1,4 +1,4 @@
-"""Vinyl Records Co. catalogue: hash index and AVL index (TP 6)."""
+"""Catalogue de Vinyl Records Co. : index par hachage et index AVL (TP 6)."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from .hash_table import HashTable
 
 @dataclass(frozen=True)
 class VinylRecord:
-    """A record of the catalogue."""
+    """Une fiche du catalogue."""
 
     reference: str
     title: str
@@ -20,11 +20,11 @@ class VinylRecord:
 
     def __post_init__(self) -> None:
         if len(self.reference) != 13 or not self.reference.isdigit():
-            raise ValueError("a catalogue reference must contain 13 digits")
+            raise ValueError("une référence de catalogue doit contenir 13 chiffres")
         if not 1900 <= self.year <= 2100:
-            raise ValueError("invalid publication year")
+            raise ValueError("année de publication invalide")
         if self.price < 0:
-            raise ValueError("the price must be non-negative")
+            raise ValueError("le prix doit être positif ou nul")
 
     @property
     def key(self) -> int:
@@ -32,10 +32,12 @@ class VinylRecord:
 
 
 class Catalogue:
-    """Two indexes over the same records.
+    """Deux index sur les mêmes fiches.
 
-    - a hash table keyed by the numeric reference, for exact lookups;
-    - an AVL tree keyed by the publication year, for range queries.
+    - une table de hachage indexée par la référence numérique, pour les
+      recherches exactes ;
+    - un arbre AVL indexé par l'année de publication, pour les requêtes par
+      intervalle.
     """
 
     def __init__(self, records: list[VinylRecord] | None = None) -> None:
@@ -50,7 +52,7 @@ class Catalogue:
 
     def add(self, record: VinylRecord) -> None:
         if record.reference in self.records:
-            raise ValueError(f"duplicate reference: {record.reference}")
+            raise ValueError(f"référence en double : {record.reference}")
         self.records[record.reference] = record
         self.by_reference.insert(record.key, record)
         self.by_year.insert(record.year, record.reference)
@@ -63,7 +65,7 @@ class Catalogue:
         return self.by_reference.get(int(reference))
 
     def between(self, first_year: int, last_year: int) -> list[VinylRecord]:
-        """All records published between two years, sorted by year and title."""
+        """Toutes les fiches publiées entre deux années, triées par année puis par titre."""
         result: list[VinylRecord] = []
         for _year, references in self.by_year.range_query(first_year, last_year):
             for reference in references:

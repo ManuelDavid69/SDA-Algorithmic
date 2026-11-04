@@ -1,4 +1,4 @@
-"""Tests for the train simulation (TP 1, exercise 1, questions 3-4)."""
+"""Tests de la simulation de train (TP 1, exercice 1, questions 3-4)."""
 
 import pytest
 
@@ -39,7 +39,7 @@ def test_board_moves_to_the_next_wagon():
     train = Train(wagons=3, capacity=4)
     for i in range(4):
         assert train.board(f"p{i}", 1) == 1
-    # The first wagon is full: the passenger goes to wagon 2.
+    # Le premier wagon est plein : le passager passe au wagon 2.
     assert train.board("p4", 1) == 2
     assert train.wagons.get(0).passengers == ["p0", "p1", "p2", "p3"]
     assert train.wagons.get(1).passengers == ["p4"]

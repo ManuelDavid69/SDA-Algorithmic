@@ -1,4 +1,4 @@
-"""Practical work 7: graph representations and basic algorithms."""
+"""Travaux pratiques 7 : représentations des graphes et algorithmes de base."""
 
 from .analysis import (
     ambassadors_possible,

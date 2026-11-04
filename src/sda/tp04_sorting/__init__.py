@@ -1,4 +1,4 @@
-"""Practical work 4: selection sort, merge sort, two-thirds sort and candies."""
+"""Travaux pratiques 4 : tri par sélection, tri fusion, tri aux deux tiers et bonbons."""
 
 from .candies import best_distribution, brute_force
 from .merge import merge, merge_sort

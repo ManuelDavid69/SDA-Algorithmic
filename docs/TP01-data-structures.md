@@ -1,94 +1,99 @@
-# TP 1 — Linked lists and stacks
+# TP 1 — Listes chaînées et piles
 
-## Objectives
+## Objectifs
 
-Re-implement two fundamental linear structures without Python's `list`:
+Réimplémenter deux structures linéaires fondamentales sans utiliser `list` de
+Python :
 
-- a **singly linked list** (`Node` + `LinkedList`);
-- a **LIFO stack** (`Stack`), built on the same node representation.
+- une **liste simplement chaînée** (`Node` + `LinkedList`) ;
+- une **pile LIFO** (`Stack`), construite sur la même représentation de nœud.
 
-The session also introduces a small simulation (a train) and a classic stack
-application: checking that a text is correctly parenthesised.
+La séance introduit aussi une petite simulation (un train) et une application
+classique des piles : vérifier qu'un texte est correctement parenthésé.
 
 ---
 
 ## 1. `LinkedList`
 
-| Operation | Meaning | Complexity |
+| Opération | Signification | Complexité |
 |---|---|---|
-| `insert(value, k)` | insert at position `k` (`0 <= k <= size`) | `O(k)` |
-| `delete(k)` | remove and return the element at `k` | `O(k)` |
-| `search(value)` | index of the first occurrence, or `-1` | `O(n)` |
-| `get(k)` | value at position `k` | `O(k)` |
-| `append(value)` | add at the end | `O(n)` |
-| `size` / `is_empty()` | current length / emptiness | `O(1)` |
+| `insert(value, k)` | insérer à la position `k` (`0 <= k <= size`) | `O(k)` |
+| `delete(k)` | retirer et renvoyer l'élément en `k` | `O(k)` |
+| `search(value)` | indice de la première occurrence, ou `-1` | `O(n)` |
+| `get(k)` | valeur à la position `k` | `O(k)` |
+| `append(value)` | ajouter à la fin | `O(n)` |
+| `size` / `is_empty()` | longueur actuelle / test de vacuité | `O(1)` |
 | `__repr__` | `1 -> 2 -> 3 -> None` | `O(n)` |
 
-Implementation choices:
+Choix d'implémentation :
 
-- a `Node` is a dataclass with a `value` and a `next` pointer;
-- the list keeps a `head` pointer and a cached `_size`, so `len()` is `O(1)`
-  while the other operations walk the chain;
-- positions are 0-based, and out-of-range indexes raise `IndexError` instead
-  of silently returning `None`;
-- `__iter__` makes the list usable in `for` loops, `list(...)` and tests.
+- un `Node` est une dataclass avec un `value` et un pointeur `next` ;
+- la liste conserve un pointeur `head` et un `_size` mis en cache, de sorte que
+  `len()` est en `O(1)` tandis que les autres opérations parcourent la chaîne ;
+- les positions sont indexées à partir de 0, et les indices hors bornes lèvent
+  une `IndexError` au lieu de renvoyer silencieusement `None` ;
+- `__iter__` rend la liste utilisable dans les boucles `for`, `list(...)` et les
+  tests.
 
-`append` is deliberately `O(n)`: the course list only stores a head pointer.
-Keeping a tail pointer would make it `O(1)` but would complicate deletion of
-the last element; the simple variant is enough for this session.
-
----
-
-## 2. Train simulation
-
-Each wagon holds at most **4 passengers**. `Train.board(passenger, k)` starts
-at wagon `k` and goes towards the end of the train:
-
-- if the wagon is full, the passenger tries the next one;
-- if the last wagon is full, boarding fails and `None` is returned.
-
-Question 4 is implemented with the optional `search_backwards=True` argument:
-when no room is found after wagon `k`, the search restarts at the front of the
-train and stops before `k`. This is the "rebrousser chemin" behaviour of the
-statement.
-
-`Train.alight(k)` removes the last passenger who entered wagon `k` and returns
-their name. `repr(train)` prints every wagon, its occupancy and its passengers.
+`append` est délibérément en `O(n)` : la liste du cours ne stocke qu'un pointeur
+de tête. Conserver un pointeur de queue la rendrait `O(1)` mais compliquerait la
+suppression du dernier élément ; la variante simple suffit pour cette séance.
 
 ---
 
-## 3. Stack and bracket analysis
+## 2. Simulation de train
 
-`Stack` is a linked stack: `push`, `pop`, `peek`, `is_empty` and `size` are all
-`O(1)`. Popping or peeking an empty stack raises `IndexError`.
+Chaque wagon contient au plus **4 passagers**. `Train.board(passenger, k)`
+commence au wagon `k` et progresse vers la fin du train :
 
-`analyse(expression)` scans the string once and returns a boolean:
+- si le wagon est plein, le passager essaie le suivant ;
+- si le dernier wagon est plein, l'embarquement échoue et `None` est renvoyé.
 
-1. an opening bracket `(`, `[`, `{` or `<` is pushed;
-2. a closing bracket must match the top of the stack, otherwise the answer is
-   `False`;
-3. the expression is valid only if the stack is empty at the end.
+La question 4 est implémentée avec l'argument optionnel `search_backwards=True` :
+lorsqu'aucune place n'est trouvée après le wagon `k`, la recherche repart de
+l'avant du train et s'arrête avant `k`. C'est le comportement de « rebrousser
+chemin » de l'énoncé.
 
-Every other character is ignored, as required by the statement. The scan is
-`O(n)` in time and `O(d)` in space, where `d` is the maximum nesting depth.
+`Train.alight(k)` retire le dernier passager entré dans le wagon `k` et renvoie
+son nom. `repr(train)` affiche chaque wagon, son taux d'occupation et ses
+passagers.
 
-### Locating the first error
+---
 
-`analyse_text(text)` returns a `BracketReport` with a 1-based `line` and
-`column`:
+## 3. Pile et analyse de parenthèses
 
-- an unexpected closing bracket is reported at its own position;
-- a mismatched closing bracket reports the position of the opening bracket it
-  should have closed;
-- an opening bracket left at the end of the file is reported at its own
+`Stack` est une pile chaînée : `push`, `pop`, `peek`, `is_empty` et `size` sont
+toutes en `O(1)`. Dépiler ou consulter le sommet d'une pile vide lève une
+`IndexError`.
+
+`analyse(expression)` parcourt la chaîne une seule fois et renvoie un booléen :
+
+1. une parenthèse ouvrante `(`, `[`, `{` ou `<` est empilée ;
+2. une parenthèse fermante doit correspondre au sommet de la pile, sinon la
+   réponse est `False` ;
+3. l'expression n'est valide que si la pile est vide à la fin.
+
+Tout autre caractère est ignoré, comme l'exige l'énoncé. Le parcours est en
+`O(n)` en temps et en `O(d)` en espace, où `d` est la profondeur d'imbrication
+maximale.
+
+### Localiser la première erreur
+
+`analyse_text(text)` renvoie un `BracketReport` avec une `line` et une `column`
+indexées à partir de 1 :
+
+- une parenthèse fermante inattendue est signalée à sa propre position ;
+- une parenthèse fermante non appariée signale la position de la parenthèse
+  ouvrante qu'elle aurait dû fermer ;
+- une parenthèse ouvrante restée à la fin du fichier est signalée à sa propre
   position.
 
-`analyse_file(path)` applies the same analysis to a UTF-8 text file, which
-covers the two HTML files of the statement.
+`analyse_file(path)` applique la même analyse à un fichier texte UTF-8, ce qui
+couvre les deux fichiers HTML de l'énoncé.
 
 ---
 
-## Run it
+## Lancer le code
 
 ```bash
 python -m sda.tp01_data_structures.demo

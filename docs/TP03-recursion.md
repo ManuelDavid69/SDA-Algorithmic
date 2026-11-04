@@ -1,19 +1,19 @@
-# TP 3 — Recursion and divide and conquer
+# TP 3 — Récursion et diviser pour régner
 
-## Objectives
+## Objectifs
 
-- write simple recursive functions (increasing/decreasing displays);
-- compare three Fibonacci implementations (naive, memoised, tail recursive);
-- apply divide and conquer to the maximum of a list;
-- solve the Towers of Hanoi;
-- implement binary search, then analyse it with the iteration method and the
-  Master Theorem.
+- écrire des fonctions récursives simples (affichages croissant/décroissant) ;
+- comparer trois implémentations de Fibonacci (naïve, mémoïsée, récursive terminale) ;
+- appliquer diviser pour régner au maximum d'une liste ;
+- résoudre les Tours de Hanoï ;
+- implémenter la recherche dichotomique, puis l'analyser avec la méthode d'itération et le
+  théorème maître.
 
 ---
 
-## 1. Recursive displays
+## 1. Affichages récursifs
 
-`numbers_ascending(n)` follows the definition directly:
+`numbers_ascending(n)` suit directement la définition :
 
 ```python
 if n == 0:
@@ -21,18 +21,18 @@ if n == 0:
 return numbers_ascending(n - 1) + [n]
 ```
 
-`numbers_descending(n)` puts the current value before the recursive call. The
-`print_*` variants call a configurable output function, which keeps them easy
-to test. Both versions use `O(n)` calls and `O(n)` total space for the result
-(or for the call stack when printing).
+`numbers_descending(n)` place la valeur courante avant l'appel récursif. Les
+variantes `print_*` appellent une fonction de sortie configurable, ce qui les rend faciles
+à tester. Les deux versions utilisent `O(n)` appels et `O(n)` d'espace total pour le résultat
+(ou pour la pile d'appels lors de l'affichage).
 
 ---
 
 ## 2. Fibonacci
 
-With the convention of the statement, `F(0) = F(1) = 1`.
+Avec la convention de l'énoncé, `F(0) = F(1) = 1`.
 
-### `fibonacci1` — naive recursion
+### `fibonacci1` — récursion naïve
 
 ```python
 if n <= 1:
@@ -40,20 +40,19 @@ if n <= 1:
 return fibonacci1(n - 1) + fibonacci1(n - 2)
 ```
 
-The recurrence is `T(n) = T(n-1) + T(n-2) + 1`, so `T(n) = Theta(phi^n)` with
-`phi = (1 + sqrt(5)) / 2 ≈ 1.618`. The call tree contains many identical
-subproblems: computing `F(30)` already performs more than a million calls.
+La récurrence est `T(n) = T(n-1) + T(n-2) + 1`, donc `T(n) = Theta(phi^n)` avec
+`phi = (1 + sqrt(5)) / 2 ≈ 1.618`. L'arbre d'appels contient de nombreux sous-problèmes
+identiques : calculer `F(30)` effectue déjà plus d'un million d'appels.
 
-### `fibonacci2` — memoisation
+### `fibonacci2` — mémoïsation
 
-A dictionary stores the values that have already been computed. Each index is
-computed once, so the time complexity drops to `O(n)` and the space complexity
-is `O(n)`.
+Un dictionnaire stocke les valeurs déjà calculées. Chaque indice est calculé une seule fois,
+donc la complexité temporelle tombe à `O(n)` et la complexité spatiale est `O(n)`.
 
-### `fibonacci3` — terminal recursion
+### `fibonacci3` — récursion terminale
 
-From `F(k) = a + b`, the next pair is `(b, a + b)`. The helper carries the two
-accumulators and makes a single recursive call:
+À partir de `F(k) = a + b`, la paire suivante est `(b, a + b)`. La fonction auxiliaire
+transporte les deux accumulateurs et effectue un seul appel récursif :
 
 ```python
 def fib(k, a, b):
@@ -64,35 +63,35 @@ def fib(k, a, b):
 return fib(n, 1, 1)
 ```
 
-The arithmetic work is `O(n)` and only two integers are carried, so the
-algorithm uses `O(1)` extra arithmetic state. Python does not perform tail-call
-optimisation, so the call stack still grows to `O(n)` frames; in a language
-with proper tail calls the stack would be constant.
+Le travail arithmétique est `O(n)` et seuls deux entiers sont transportés, donc l'algorithme
+utilise `O(1)` d'état arithmétique supplémentaire. Python n'effectue pas d'optimisation des
+appels terminaux, donc la pile d'appels croît tout de même jusqu'à `O(n)` trames ; dans un
+langage avec appels terminaux appropriés, la pile serait constante.
 
-### Measured behaviour
+### Comportement mesuré
 
-`python -m sda.tp03_recursion.demo` prints timings for `n = 5, 10, 15, 20, 25,
-30`. The naive version grows roughly by a factor of `phi` at each step, while
-the two others stay in the microsecond range.
+`python -m sda.tp03_recursion.demo` affiche les temps pour `n = 5, 10, 15, 20, 25,
+30`. La version naïve croît approximativement d'un facteur `phi` à chaque étape, tandis que
+les deux autres restent dans l'ordre de la microseconde.
 
 ---
 
-## 3. Divide-and-conquer maximum
+## 3. Maximum par diviser pour régner
 
-`max_list` splits the list in two halves, computes the maximum of each half
-recursively, and returns the larger one:
+`max_list` divise la liste en deux moitiés, calcule récursivement le maximum de chaque moitié
+et renvoie le plus grand :
 
 ```
 T(n) = 2 T(n/2) + O(1)
 ```
 
-The Master Theorem (case 1, `a = b = 2`) gives `T(n) = Theta(n)`. This is the
-same asymptotic cost as a linear scan, with a larger constant and `O(log n)`
-stack frames; the exercise is about the method, not about beating `max()`.
+Le théorème maître (cas 1, `a = b = 2`) donne `T(n) = Theta(n)`. C'est le même coût
+asymptotique qu'un parcours linéaire, avec une constante plus grande et `O(log n)` trames de
+pile ; l'exercice porte sur la méthode, pas sur le fait de battre `max()`.
 
 ---
 
-## 4. Towers of Hanoi
+## 4. Tours de Hanoï
 
 ```python
 solve(n - 1, source, auxiliary, target)
@@ -100,71 +99,71 @@ move(source, target)
 solve(n - 1, auxiliary, target, source)
 ```
 
-The recurrence is `T(n) = 2 T(n-1) + 1` with `T(0) = 0`, hence `T(n) = 2^n - 1`
-moves. The test suite replays the moves on three stacks and checks that no
-disk is ever placed on a smaller one.
+La récurrence est `T(n) = 2 T(n-1) + 1` avec `T(0) = 0`, d'où `T(n) = 2^n - 1`
+déplacements. La suite de tests rejoue les déplacements sur trois piles et vérifie qu'aucun
+disque n'est jamais placé sur un disque plus petit.
 
 ---
 
-## 5. Sequential and binary search
+## 5. Recherche séquentielle et dichotomique
 
-### Sequential search
+### Recherche séquentielle
 
-- best case: the first element matches, `O(1)`;
-- worst case: the element is absent (or last), `O(n)`;
-- average case: `O(n)` (about `n/2` comparisons).
+- meilleur cas : le premier élément correspond, `O(1)` ;
+- pire cas : l'élément est absent (ou en dernier), `O(n)` ;
+- cas moyen : `O(n)` (environ `n/2` comparaisons).
 
-### Binary search
+### Recherche dichotomique
 
-The list must be sorted. At each step the algorithm compares the middle
-element with the target and discards one half:
+La liste doit être triée. À chaque étape, l'algorithme compare l'élément du milieu avec la
+cible et élimine une moitié :
 
 ```
 T(n) = T(n/2) + O(1)
 ```
 
-The iteration method gives `T(n) = O(log n)`. The Master Theorem applies with
-`a = 1`, `b = 2`, `f(n) = O(1)`: `log_b(a) = 0`, so case 2 gives
-`Theta(log n)`. Both the recursive and the iterative versions are
-implemented; `dicho` is an alias of the recursive one, as in the statement.
+La méthode d'itération donne `T(n) = O(log n)`. Le théorème maître s'applique avec
+`a = 1`, `b = 2`, `f(n) = O(1)` : `log_b(a) = 0`, donc le cas 2 donne
+`Theta(log n)`. Les versions récursive et itérative sont implémentées ; `dicho` est un alias
+de la version récursive, comme dans l'énoncé.
 
 ---
 
-## 6. Master Theorem
+## 6. Théorème maître
 
-### 1. Applying the theorem
+### 1. Application du théorème
 
-| Recurrence | Parameters | Case | Result |
+| Récurrence | Paramètres | Cas | Résultat |
 |---|---|---|---|
 | `T(n) = 8 T(n/2) + 1000 n^3` | `a=8, b=2, log_b a=3` | 2 | `Theta(n^3 log n)` |
 | `T(n) = 2 T(n/2) + 10 n` | `a=2, b=2, log_b a=1` | 2 | `Theta(n log n)` |
 | `T(n) = 2 T(n/2) + n^2` | `a=2, b=2, log_b a=1` | 3 | `Theta(n^2)` |
-| `T(n) = 9 T(n/3) + n^2 log n` | `a=9, b=3, log_b a=2` | extended 2 | `Theta(n^2 log^2 n)` |
+| `T(n) = 9 T(n/3) + n^2 log n` | `a=9, b=3, log_b a=2` | cas 2 étendu | `Theta(n^2 log^2 n)` |
 
-For the last one, `f(n) = n^2 log n` is larger than `n^2` but not
-polynomially larger, so the standard case 3 does not apply; the extended case
-2 gives the extra logarithm.
+Pour la dernière, `f(n) = n^2 log n` est plus grand que `n^2` mais pas polynomialement plus
+grand, donc le cas 3 standard ne s'applique pas ; le cas 2 étendu fournit le logarithme
+supplémentaire.
 
-### 2. Why the theorem does not apply
+### 2. Pourquoi le théorème ne s'applique pas
 
-| Recurrence | Reason |
+| Récurrence | Raison |
 |---|---|
-| `T(n) = 2n T(n/2) + n` | the number of subproblems `a = 2n` depends on `n`; `a` must be a constant |
-| `T(n) = (1/2) T(n/2) + n` | `a = 1/2 < 1`: the subproblem is smaller than the original one in a way that does not define a divide-and-conquer recurrence |
-| `T(n) = 64 T(n/8) - n^2 log n` | the "toll" is negative; the theorem requires a positive `f(n)` |
-| `T(n) = T(n/2) + n(2 - cos n)` | `f(n)` oscillates and does not satisfy the regularity condition `a f(n/b) <= c f(n)` |
+| `T(n) = 2n T(n/2) + n` | le nombre de sous-problèmes `a = 2n` dépend de `n` ; `a` doit être une constante |
+| `T(n) = (1/2) T(n/2) + n` | `a = 1/2 < 1` : le sous-problème est plus petit que l'original d'une manière qui ne définit pas une récurrence de type diviser pour régner |
+| `T(n) = 64 T(n/8) - n^2 log n` | le « coût » est négatif ; le théorème exige un `f(n)` positif |
+| `T(n) = T(n/2) + n(2 - cos n)` | `f(n)` oscille et ne satisfait pas la condition de régularité `a f(n/b) <= c f(n)` |
 
-### 3. Change of variable
+### 3. Changement de variable
 
-For `T(n) = 2 T(sqrt(n)) + log2 n`, set `m = log2 n` and
-`S(m) = T(2^m)`. Since `sqrt(n) = 2^(m/2)`:
+Pour `T(n) = 2 T(sqrt(n)) + log2 n`, posons `m = log2 n` et
+`S(m) = T(2^m)`. Comme `sqrt(n) = 2^(m/2)` :
 
 ```
 S(m) = 2 S(m/2) + m
 ```
 
-The Master Theorem gives `S(m) = Theta(m log m)` (case 2 with `a = b = 2`).
-Going back to `n`:
+Le théorème maître donne `S(m) = Theta(m log m)` (cas 2 avec `a = b = 2`).
+En revenant à `n` :
 
 ```
 T(n) = Theta(log n * log log n)
@@ -172,7 +171,7 @@ T(n) = Theta(log n * log log n)
 
 ---
 
-## Run it
+## Exécution
 
 ```bash
 python -m sda.tp03_recursion.demo

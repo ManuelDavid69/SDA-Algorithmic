@@ -1,4 +1,4 @@
-"""ASCII rendering of binary trees (TP 5, exercise 1, question 3)."""
+"""Rendu ASCII d'arbres binaires (TP 5, exercice 1, question 3)."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from .bst import BSTNode
 
 
 def tree_lines(node: BSTNode | None) -> list[str]:
-    """Return an ASCII representation of the tree, one line per node."""
+    """Renvoie une représentation ASCII de l'arbre, une ligne par nœud."""
     if node is None:
         return ["<empty>"]
     lines = [str(node.key)]

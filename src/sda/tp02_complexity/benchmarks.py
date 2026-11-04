@@ -1,8 +1,8 @@
-"""Runtime measurements and complexity tables for TP 2.
+"""Mesures de temps d'exécution et tableaux de complexité pour le TP 2.
 
-The theoretical tables use the hypothesis of the statement: one elementary
-operation costs one microsecond.  Durations are formatted with ASCII units so
-that the output is identical on every platform.
+Les tableaux théoriques reposent sur l'hypothèse de l'énoncé : une opération
+élémentaire coûte une microseconde.  Les durées sont formatées avec des unités
+ASCII afin que l'affichage soit identique sur toutes les plateformes.
 """
 
 from __future__ import annotations
@@ -56,7 +56,7 @@ class MaxInstance:
 
 
 def is_prime(n: int) -> bool:
-    """Trial division up to ``sqrt(n)``, as in the statement."""
+    """Division par essais successifs jusqu'à ``sqrt(n)``, comme dans l'énoncé."""
     if n < 2:
         return False
     for divisor in range(2, math.isqrt(n) + 1):
@@ -66,14 +66,14 @@ def is_prime(n: int) -> bool:
 
 
 def prime_iterations(n: int) -> int:
-    """Number of loop iterations performed by :func:`is_prime`."""
+    """Nombre d'itérations de boucle effectuées par :func:`is_prime`."""
     if n < 2:
         return 0
     return math.isqrt(n) - 1
 
 
 def measure_prime(numbers: tuple[int, ...] | list[int], repeats: int = 1) -> list[PrimeMeasurement]:
-    """Time :func:`is_prime` on each number and record the number of digits."""
+    """Chronomètre :func:`is_prime` sur chaque nombre et enregistre le nombre de chiffres."""
     measurements: list[PrimeMeasurement] = []
     for number in numbers:
         best = math.inf
@@ -93,7 +93,7 @@ def measure_prime(numbers: tuple[int, ...] | list[int], repeats: int = 1) -> lis
 
 
 def format_duration(seconds: float) -> str:
-    """Format a duration with a readable unit."""
+    """Formate une durée avec une unité lisible."""
     if seconds < 1e-6:
         return f"{seconds * 1e9:.1f} ns"
     if seconds < 1e-3:
@@ -107,11 +107,11 @@ def format_duration(seconds: float) -> str:
     if seconds < DAY:
         return f"{seconds / HOUR:.2f} h"
     if seconds < YEAR:
-        return f"{seconds / DAY:.2f} days"
+        return f"{seconds / DAY:.2f} jours"
     years = seconds / YEAR
     if years < 1e6:
-        return f"{years:.2f} years"
-    return f"{years:.2e} years"
+        return f"{years:.2f} ans"
+    return f"{years:.2e} ans"
 
 
 def _format_log10(log10_value: float) -> str:
@@ -119,24 +119,24 @@ def _format_log10(log10_value: float) -> str:
 
 
 def theoretical_times(n: int = 10**6, operation_seconds: float = 1e-6) -> dict[str, str]:
-    """Times needed by the four algorithms of exercise 3, question 1."""
+    """Temps nécessaires aux quatre algorithmes de l'exercice 3, question 1."""
     results: dict[str, str] = {}
     results["log n"] = format_duration(math.log2(n) * operation_seconds)
     results["n"] = format_duration(n * operation_seconds)
     results["n^2"] = format_duration(n * n * operation_seconds)
-    # 2^n overflows every float: work with logarithms.
+    # 2^n dépasse la capacité de tout flottant : on travaille avec des logarithmes.
     log10_seconds = n * math.log10(2) + math.log10(operation_seconds)
     seconds = 10**log10_seconds if log10_seconds < 308 else math.inf
     if math.isfinite(seconds):
         results["2^n"] = format_duration(seconds)
     else:
         log10_years = log10_seconds - math.log10(YEAR)
-        results["2^n"] = f"about {_format_log10(log10_years)} years"
+        results["2^n"] = f"environ {_format_log10(log10_years)} ans"
     return results
 
 
 def _solve_n_log_n(seconds: float) -> int:
-    """Largest n such that ``n * log2(n) <= seconds``."""
+    """Plus grand n tel que ``n * log2(n) <= seconds``."""
     if seconds < 1:
         return 1
     low, high = 1.0, max(2.0, seconds)
@@ -150,13 +150,13 @@ def _solve_n_log_n(seconds: float) -> int:
 
 
 def _inverse_factorial(seconds: float) -> int:
-    """Largest n such that ``n! <= seconds``."""
+    """Plus grand n tel que ``n! <= seconds``."""
     n = 1
     factorial = 1
     while math.factorial(n + 1) <= seconds:
         n += 1
         factorial = math.factorial(n)
-        if n > 1000:  # pragma: no cover - unreachable with realistic budgets
+        if n > 1000:  # pragma: no cover - inatteignable avec des budgets réalistes
             break
     return n if factorial <= seconds else n - 1
 
@@ -170,11 +170,11 @@ def _format_size(value: int | None, fallback: str) -> str:
 
 
 def max_instance_sizes(seconds: float, operation_seconds: float = 1e-6) -> list[MaxInstance]:
-    """Largest instance solvable in ``seconds`` for each complexity.
+    """Plus grande instance soluble en ``seconds`` pour chaque complexité.
 
-    ``operation_seconds`` is the duration of one elementary operation
-    (one microsecond by default), so the number of available operations is
-    ``seconds / operation_seconds``.
+    ``operation_seconds`` est la durée d'une opération élémentaire (une
+    microseconde par défaut), de sorte que le nombre d'opérations disponibles
+    vaut ``seconds / operation_seconds``.
     """
     operations = seconds / operation_seconds
     sizes: list[MaxInstance] = []
@@ -219,9 +219,9 @@ def max_instance_sizes(seconds: float, operation_seconds: float = 1e-6) -> list[
 
 
 def complexity_table(budgets: dict[str, float] | None = None) -> list[list[str]]:
-    """Build the table of exercise 3, question 2 as rows of strings."""
+    """Construit le tableau de l'exercice 3, question 2 sous forme de lignes de chaînes."""
     budgets = budgets or BUDGETS
-    header = ["Complexity", *budgets.keys()]
+    header = ["Complexité", *budgets.keys()]
     rows = [header]
     labels = ("lg n", "sqrt(n)", "n", "n lg n", "n^2", "n^3", "2^n", "n!")
     for label in labels:

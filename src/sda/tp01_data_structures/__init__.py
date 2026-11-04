@@ -1,4 +1,4 @@
-"""Practical work 1: linked lists, stacks and bracket analysis."""
+"""Travaux pratiques 1 : listes chaînées, piles et analyse de parenthèses."""
 
 from .linked_list import LinkedList, Node
 from .stack import BracketReport, Stack, analyse, analyse_file, analyse_text

@@ -1,17 +1,17 @@
-# TP 4 — Sorting algorithms
+# TP 4 — Algorithmes de tri
 
-## Objectives
+## Objectifs
 
-- implement selection sort and prove its loop invariant;
-- analyse merge sort with the iteration method, a recursion tree and the
-  Master Theorem;
-- implement the two-thirds sort from the 2024 exam and prove its correctness;
-- solve the candy distribution problem, first by brute force and then with an
-  efficient `O(n log n)` algorithm.
+- implémenter le tri par sélection et prouver son invariant de boucle ;
+- analyser le tri fusion avec la méthode d'itération, un arbre de récursion et le
+  théorème maître ;
+- implémenter le tri aux deux tiers de l'examen 2024 et prouver sa correction ;
+- résoudre le problème de la distribution des bonbons, d'abord par force brute puis avec un
+  algorithme efficace en `O(n log n)`.
 
 ---
 
-## 1. Selection sort
+## 1. Tri par sélection
 
 ```python
 for i in range(n):
@@ -22,44 +22,44 @@ for i in range(n):
     swap(items[i], items[minimum])
 ```
 
-### Loop invariant
+### Invariant de boucle
 
-Before iteration `i`:
+Avant l'itération `i` :
 
-- `items[:i]` is sorted;
-- `items[:i]` contains the `i` smallest elements of the whole list.
+- `items[:i]` est trié ;
+- `items[:i]` contient les `i` plus petits éléments de la liste entière.
 
-Initially `i = 0` and the prefix is empty, so the invariant holds.  At
-iteration `i`, the inner loop finds the smallest element of `items[i:]` and
-swaps it to position `i`.  The prefix becomes `items[:i+1]`, still sorted, and
-contains the `i+1` smallest elements.  At the end, `i = n` and the whole list
-is sorted.
+Initialement `i = 0` et le préfixe est vide, donc l'invariant est vrai.  À
+l'itération `i`, la boucle interne trouve le plus petit élément de `items[i:]` et
+l'échange avec la position `i`.  Le préfixe devient `items[:i+1]`, toujours trié, et
+contient les `i+1` plus petits éléments.  À la fin, `i = n` et la liste entière
+est triée.
 
-### Complexity
+### Complexité
 
-The inner loop performs `n - 1 - i` comparisons, so the total is
+La boucle interne effectue `n - 1 - i` comparaisons, donc le total est
 
 ```
 (n-1) + (n-2) + ... + 1 = n(n-1)/2 = Theta(n^2)
 ```
 
-in the best case, the worst case and the average case.  The number of swaps
-is at most `n - 1`, but it does not change the asymptotic cost.
+dans le meilleur cas, le pire cas et le cas moyen.  Le nombre d'échanges
+est au plus `n - 1`, mais cela ne change pas le coût asymptotique.
 
 ---
 
-## 2. Merge sort
+## 2. Tri fusion
 
-### Recurrence
+### Récurrence
 
 ```
 T(1) = Theta(1)
-T(n) = 2 T(n/2) + Theta(n)   for n > 1
+T(n) = 2 T(n/2) + Theta(n)   pour n > 1
 ```
 
-The `Theta(n)` term is the merge of the two sorted halves.
+Le terme `Theta(n)` est la fusion des deux moitiés triées.
 
-### Iteration method
+### Méthode d'itération
 
 ```
 T(n) = 2 T(n/2) + n
@@ -69,103 +69,103 @@ T(n) = 2 T(n/2) + n
      = 2^k T(n/2^k) + kn
 ```
 
-With `k = log2 n`, `T(n) = n T(1) + n log2 n = Theta(n log n)`.
+Avec `k = log2 n`, `T(n) = n T(1) + n log2 n = Theta(n log n)`.
 
-### Recursion tree
+### Arbre de récursion
 
-Each level contains total work `n` (the merges partition the input), and the
-tree has `log2 n + 1` levels, hence `Theta(n log n)`.
+Chaque niveau contient un travail total `n` (les fusions partitionnent l'entrée), et
+l'arbre a `log2 n + 1` niveaux, d'où `Theta(n log n)`.
 
-### Master Theorem
+### Théorème maître
 
-`a = 2`, `b = 2`, `log_b a = 1`, and `f(n) = Theta(n)`.  This is case 2, so
-`T(n) = Theta(n log n)`.  All three methods agree.
+`a = 2`, `b = 2`, `log_b a = 1`, et `f(n) = Theta(n)`.  C'est le cas 2, donc
+`T(n) = Theta(n log n)`.  Les trois méthodes concordent.
 
 ---
 
-## 3. Two-thirds sort (2024 exam)
+## 3. Tri aux deux tiers (examen 2024)
 
 ```
-sort(first two thirds)
-sort(last two thirds)
-sort(first two thirds)
+trier(les deux premiers tiers)
+trier(les deux derniers tiers)
+trier(les deux premiers tiers)
 ```
 
-Let `k = ceil(2n/3)`, `A = items[0:k]` (first two thirds) and
-`B = items[n-k:n]` (last two thirds).  Their overlap is
-`O = items[n-k:k]`; the prefix `A \ B` is the first `n-k` elements and the
-suffix `B \ A` is the last `n-k` elements.
+Soit `k = ceil(2n/3)`, `A = items[0:k]` (les deux premiers tiers) et
+`B = items[n-k:n]` (les deux derniers tiers).  Leur chevauchement est
+`O = items[n-k:k]` ; le préfixe `A \ B` correspond aux `n-k` premiers éléments et le
+suffixe `B \ A` aux `n-k` derniers éléments.
 
-### Correctness
+### Correction
 
-1. After the first sort, `A` is sorted; in particular every element of
-   `A \ B` is at most every element of `O`.
-2. During the second sort, `B` is sorted.  Since `O` is a prefix of `B`, the
-   `|O|` smallest elements of `B` end up in `O`, so every element of `O` is at
-   most every element of `B \ A`.
-3. Therefore `A \ B <= O <= B \ A`, and both `A` and `B` are internally
-   sorted.
-4. The third sort sorts `A` again.  This restores order inside the overlap
-   `O` while preserving the separation between `A \ B`, `O` and `B \ A`.
-   The whole array is sorted.
+1. Après le premier tri, `A` est trié ; en particulier, tout élément de
+   `A \ B` est inférieur ou égal à tout élément de `O`.
+2. Pendant le second tri, `B` est trié.  Comme `O` est un préfixe de `B`, les
+   `|O|` plus petits éléments de `B` se retrouvent dans `O`, donc tout élément de `O` est
+   inférieur ou égal à tout élément de `B \ A`.
+3. Par conséquent `A \ B <= O <= B \ A`, et `A` et `B` sont tous deux triés
+   intérieurement.
+4. Le troisième tri trie `A` de nouveau.  Cela rétablit l'ordre à l'intérieur du
+   chevauchement `O` tout en préservant la séparation entre `A \ B`, `O` et `B \ A`.
+   Le tableau entier est trié.
 
-The base case `n <= 2` sorts the two elements directly.  This base case is
-necessary: for `n = 2`, the "first two thirds" is the whole array and the
-recursion would not shrink.
+Le cas de base `n <= 2` trie directement les deux éléments.  Ce cas de base est
+nécessaire : pour `n = 2`, les « deux premiers tiers » représentent le tableau entier et la
+récursion ne diminuerait pas.
 
-### Recurrence and complexity
+### Récurrence et complexité
 
-The three recursive calls have size `ceil(2n/3)` and the work outside the
-calls is `Theta(1)`:
+Les trois appels récursifs ont une taille `ceil(2n/3)` et le travail hors des
+appels est `Theta(1)` :
 
 ```
 T(n) = 3 T(2n/3) + Theta(1)
 ```
 
-With `a = 3`, `b = 3/2`, `log_b a = ln 3 / ln 1.5 ≈ 2.7095`.  Since
-`f(n) = Theta(1) = O(n^(2.7095 - epsilon))`, case 1 of the Master Theorem
-gives:
+Avec `a = 3`, `b = 3/2`, `log_b a = ln 3 / ln 1.5 ≈ 2.7095`.  Comme
+`f(n) = Theta(1) = O(n^(2.7095 - epsilon))`, le cas 1 du théorème maître
+donne :
 
 ```
 T(n) = Theta(n^(log_(3/2)(3))) = Theta(n^2.71)
 ```
 
-This is **worse** than insertion sort (`Theta(n^2)`) and much worse than merge
-sort (`Theta(n log n)`).  The algorithm is interesting as an exercise, not as
-a practical sorting method.
+C'est **pire** que le tri par insertion (`Theta(n^2)`) et bien pire que le tri
+fusion (`Theta(n log n)`).  L'algorithme est intéressant comme exercice, pas comme
+méthode de tri pratique.
 
 ---
 
-## 4. Candy distribution
+## 4. Distribution des bonbons
 
-### Question 1 — brute force
+### Question 1 — force brute
 
-Enumerate every subset of `m` packets among `n`, evaluate its spread
-`max - min`, and keep the best one.  There are `C(n, m)` subsets and each
-evaluation costs `O(m)`, so the complexity is `O(C(n, m) * m)`, which is
-exponential in `n`.
+Énumérer tous les sous-ensembles de `m` paquets parmi `n`, évaluer leur étendue
+`max - min`, et garder le meilleur.  Il y a `C(n, m)` sous-ensembles et chaque
+évaluation coûte `O(m)`, donc la complexité est `O(C(n, m) * m)`, ce qui est
+exponentiel en `n`.
 
-### Question 2 — efficient algorithm
+### Question 2 — algorithme efficace
 
-1. sort the packets: `O(n log n)`;
-2. slide a window of exactly `m` consecutive packets over the sorted list and
-   keep the window with the smallest `last - first`: `O(n)`.
+1. trier les paquets : `O(n log n)` ;
+2. faire glisser une fenêtre d'exactement `m` paquets consécutifs sur la liste triée et
+   garder la fenêtre dont `last - first` est le plus petit : `O(n)`.
 
-Why is a consecutive window enough?  Take an optimal subset, let `a` be its
-smallest element and `b` its largest.  In the sorted list, the window that
-starts at `a` and contains `m` consecutive packets ends at an element `b' <=
-b`, so its spread is at most `b - a`.  Replacing the optimal subset by this
-window therefore cannot increase the difference.  Some optimal solution is
-thus a consecutive window.
+Pourquoi une fenêtre consécutive suffit-elle ?  Prenons un sous-ensemble optimal, soit `a`
+son plus petit élément et `b` son plus grand.  Dans la liste triée, la fenêtre qui
+commence à `a` et contient `m` paquets consécutifs se termine à un élément `b' <=
+b`, donc son étendue est au plus `b - a`.  Remplacer le sous-ensemble optimal par cette
+fenêtre ne peut donc pas augmenter la différence.  Une solution optimale est ainsi une
+fenêtre consécutive.
 
-Total complexity: `O(n log n)` time, `O(n)` extra space for the sorted copy.
+Complexité totale : `O(n log n)` en temps, `O(n)` d'espace supplémentaire pour la copie triée.
 
-The test suite compares the efficient result with the brute-force result on
-random small instances.
+La suite de tests compare le résultat efficace avec le résultat par force brute sur de
+petites instances aléatoires.
 
 ---
 
-## Run it
+## Exécution
 
 ```bash
 python -m sda.tp04_sorting.demo

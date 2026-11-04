@@ -1,4 +1,4 @@
-"""AVL tree indexed by year, with range queries (TP 6, exercise 2)."""
+"""Arbre AVL indexé par année, avec requêtes par intervalle (TP 6, exercice 2)."""
 
 from __future__ import annotations
 
@@ -15,11 +15,11 @@ class AVLNode:
 
 
 class AVLTree:
-    """An AVL tree whose nodes store a year and the catalogue references.
+    """Un arbre AVL dont les nœuds stockent une année et les références du catalogue.
 
-    Heights are counted in levels: an empty tree has height ``0`` and a leaf
-    has height ``1``.  The balance factor of a node is
-    ``height(left) - height(right)``.
+    Les hauteurs sont comptées en niveaux : un arbre vide a pour hauteur ``0``
+    et une feuille a pour hauteur ``1``. Le facteur d'équilibre d'un nœud est
+    ``hauteur(gauche) - hauteur(droite)``.
     """
 
     def __init__(self) -> None:
@@ -74,7 +74,7 @@ class AVLTree:
     # Insertion
     # ------------------------------------------------------------------
     def insert(self, key: int, reference: str | None = None) -> None:
-        """Insert ``key`` or append ``reference`` to an existing key."""
+        """Insère ``key`` ou ajoute ``reference`` à une clé existante."""
         self.root = self._insert(self.root, key, reference)
 
     def _insert(
@@ -128,14 +128,14 @@ class AVLTree:
         return list(node.refs) if node is not None else None
 
     # ------------------------------------------------------------------
-    # Queries and traversal
+    # Requêtes et parcours
     # ------------------------------------------------------------------
     def range_query(self, low: int, high: int) -> list[tuple[int, list[str]]]:
-        """Return all ``(year, references)`` with ``low <= year <= high``.
+        """Renvoie tous les ``(année, références)`` tels que ``low <= année <= high``.
 
-        The traversal prunes subtrees that cannot intersect the interval, so
-        the cost is ``O(log n + k)`` where ``k`` is the number of returned
-        nodes.
+        Le parcours élague les sous-arbres qui ne peuvent pas intersecter
+        l'intervalle, le coût est donc ``O(log n + k)`` où ``k`` est le nombre
+        de nœuds renvoyés.
         """
         if low > high:
             return []

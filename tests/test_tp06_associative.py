@@ -1,4 +1,4 @@
-"""Tests for TP 6: hash table, AVL tree and vinyl catalogue."""
+"""Tests du TP 6 : table de hachage, arbre AVL et catalogue de vinyles."""
 
 import pytest
 
@@ -55,17 +55,17 @@ def test_hash_get_update_and_delete():
 
 
 def test_hash_deletion_leaves_a_tombstone():
-    # 1, 8 and 15 all hash to slot 1 in a table of size 7.
+    # 1, 8 et 15 se hachent tous vers l'emplacement 1 dans une table de taille 7.
     table = HashTable(size=7)
     for key in (1, 8, 15):
         table.insert(key, key)
     assert table.slot_of(15) == 3
     table.delete(8)
-    # With a naive None deletion, the search for 15 would stop at slot 2.
+    # Avec une suppression naïve par None, la recherche de 15 s'arrêterait à l'emplacement 2.
     assert table.get(15) == 15
     assert table.slot_of(15) == 3
     assert table.insert(22, 22) == 3
-    assert table.slot_of(22) == 2  # the tombstone is reused
+    assert table.slot_of(22) == 2  # la pierre tombale est réutilisée
     assert table.get(15) == 15
     assert table.get(22) == 22
 
@@ -84,7 +84,7 @@ def test_hash_invalid_arguments():
         HashTable(size=0)
     table = HashTable(size=5)
     with pytest.raises(TypeError):
-        table.insert("not an int", 1)
+        table.insert("pas un entier", 1)
     with pytest.raises(KeyError):
         table.delete(4)
 

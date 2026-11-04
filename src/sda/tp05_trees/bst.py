@@ -1,4 +1,4 @@
-"""Binary search tree with chained nodes (TP 5, exercise 1)."""
+"""Arbre binaire de recherche à nœuds chaînés (TP 5, exercice 1)."""
 
 from __future__ import annotations
 
@@ -14,11 +14,11 @@ class BSTNode:
 
 
 class BST:
-    """A binary search tree of integers.
+    """Un arbre binaire de recherche d'entiers.
 
-    Every key is unique.  The three operations of the statement are
-    ``insert``, ``search`` and ``delete``; the class also provides the three
-    depth-first traversals and a validity check.
+    Chaque clé est unique. Les trois opérations de l'énoncé sont
+    ``insert``, ``search`` et ``delete`` ; la classe fournit aussi les trois
+    parcours en profondeur et une vérification de validité.
     """
 
     def __init__(self) -> None:
@@ -26,7 +26,7 @@ class BST:
         self._size = 0
 
     # ------------------------------------------------------------------
-    # Size and representation
+    # Taille et représentation
     # ------------------------------------------------------------------
     def __len__(self) -> int:
         return self._size
@@ -51,10 +51,10 @@ class BST:
         return tree
 
     # ------------------------------------------------------------------
-    # Insertion and search
+    # Insertion et recherche
     # ------------------------------------------------------------------
     def insert(self, key: int) -> None:
-        """Insert ``key``; duplicate keys are ignored."""
+        """Insère ``key`` ; les clés en double sont ignorées."""
         if self.root is None:
             self.root = BSTNode(key)
             self._size = 1
@@ -87,14 +87,14 @@ class BST:
         return self.find(key) is not None
 
     # ------------------------------------------------------------------
-    # Deletion
+    # Suppression
     # ------------------------------------------------------------------
     def delete(self, key: int) -> bool:
-        """Delete ``key``; return ``True`` when it was present.
+        """Supprime ``key`` ; renvoie ``True`` si elle était présente.
 
-        Three cases: a leaf is removed, a node with one child is replaced by
-        that child, and a node with two children is replaced by its in-order
-        successor (the minimum of its right subtree).
+        Trois cas : une feuille est retirée, un nœud à un seul enfant est
+        remplacé par cet enfant, et un nœud à deux enfants est remplacé par son
+        successeur infixe (le minimum de son sous-arbre droit).
         """
         self.root, removed = self._delete(self.root, key)
         if removed:
@@ -122,12 +122,12 @@ class BST:
 
     def minimum(self) -> int:
         if self.root is None:
-            raise ValueError("minimum of an empty tree")
+            raise ValueError("minimum d'un arbre vide")
         return self._minimum_node(self.root).key
 
     def maximum(self) -> int:
         if self.root is None:
-            raise ValueError("maximum of an empty tree")
+            raise ValueError("maximum d'un arbre vide")
         node = self.root
         while node.right is not None:
             node = node.right
@@ -140,7 +140,7 @@ class BST:
         return node
 
     # ------------------------------------------------------------------
-    # Traversals and properties
+    # Parcours et propriétés
     # ------------------------------------------------------------------
     def in_order(self) -> list[int]:
         result: list[int] = []
@@ -158,7 +158,7 @@ class BST:
         return result
 
     def height(self) -> int:
-        """Height in edges: ``-1`` for an empty tree, ``0`` for a leaf."""
+        """Hauteur en arêtes : ``-1`` pour un arbre vide, ``0`` pour une feuille."""
         return _height(self.root)
 
     def is_valid(self) -> bool:

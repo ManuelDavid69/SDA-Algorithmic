@@ -1,4 +1,4 @@
-"""Practical work 8: NetworkX and Dijkstra's shortest path."""
+"""Travaux pratiques 8 : NetworkX et plus court chemin de Dijkstra."""
 
 from .dijkstra import dijkstra1, dijkstra2, dijkstra_heap, edge_weight
 from .fixture import (

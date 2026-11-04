@@ -1,108 +1,109 @@
-# TP 8 — NetworkX and Dijkstra
+# TP 8 — NetworkX et Dijkstra
 
-## Objectives
+## Objectifs
 
-- discover NetworkX on the Petersen graph (vertices, edges, degrees,
-  matrices, induced subgraph, drawing);
-- load a weighted graph from a multiline adjacency list;
-- implement **Dijkstra's algorithm** by hand, with three variants of the
-  visited set;
-- compare the running times and explain the differences;
-- apply the result to a real street network with OSMnx (optional).
+- découvrir NetworkX sur le graphe de Petersen (sommets, arêtes, degrés,
+  matrices, sous-graphe induit, dessin) ;
+- charger un graphe pondéré à partir d'une liste d'adjacence multiligne ;
+- implémenter **l'algorithme de Dijkstra** à la main, avec trois variantes de
+  l'ensemble des sommets visités ;
+- comparer les temps d'exécution et expliquer les différences ;
+- appliquer le résultat à un réseau routier réel avec OSMnx (facultatif).
 
-The code lives in `src/sda/tp08_networkx`:
+Le code se trouve dans `src/sda/tp08_networkx` :
 
-| Module | Contents |
+| Module | Contenu |
 |---|---|
-| `fixture.py` | reproducible 20-vertex / 30-edge weighted graph and its file |
-| `dijkstra.py` | `dijkstra1` (list), `dijkstra2` (set), `dijkstra_heap` |
-| `routing.py` | OSMnx loading, geocoding helpers, route drawing |
+| `fixture.py` | graphe pondéré reproductible à 20 sommets / 30 arêtes et son fichier |
+| `dijkstra.py` | `dijkstra1` (liste), `dijkstra2` (ensemble), `dijkstra_heap` |
+| `routing.py` | chargement OSMnx, fonctions de géocodage, tracé d'itinéraire |
 
-Notebooks:
+Notebooks :
 
 - [`notebooks/tp08_networkx_dijkstra.ipynb`](../notebooks/tp08_networkx_dijkstra.ipynb)
-  — NetworkX discovery, graph drawing, all three Dijkstra versions and timing
-  (executed, outputs included);
+  — découverte de NetworkX, dessin de graphes, les trois versions de Dijkstra et
+  les mesures de temps (exécuté, sorties incluses) ;
 - [`notebooks/tp08_osmnx_routing.ipynb`](../notebooks/tp08_osmnx_routing.ipynb)
-  — the Lyon route calculator (not executed: it needs internet access and the
-  optional OSMnx package).
+  — le calculateur d'itinéraires lyonnais (non exécuté : il nécessite un accès à
+  Internet et le paquet facultatif OSMnx).
 
 ---
 
-## 1. First steps with NetworkX
+## 1. Premiers pas avec NetworkX
 
-NetworkX stores a graph as a dictionary of dictionaries:
-`G[node]` maps each neighbour to its edge data.  Graphs can be created from an
-edge list, an adjacency matrix, a generator, a file, or a copy.
+NetworkX stocke un graphe sous forme de dictionnaire de dictionnaires :
+`G[node]` associe à chaque voisin ses données d'arête. Les graphes peuvent être
+créés à partir d'une liste d'arêtes, d'une matrice d'adjacence, d'un générateur,
+d'un fichier ou d'une copie.
 
-Useful calls:
+Appels utiles :
 
-| Call | Result |
+| Appel | Résultat |
 |---|---|
 | `G.is_directed()` | orientation |
-| `G.nodes`, `G.edges` | vertices and edges |
-| `G.neighbors(v)`, `G.degree[v]` | neighbourhood and degree |
-| `nx.is_regular(G)`, `nx.is_connected(G)` | global properties |
-| `nx.to_numpy_array(G)` | adjacency matrix |
-| `nx.incidence_matrix(G)` | incidence matrix |
-| `G.subgraph(vertices)` | induced subgraph |
-| `nx.shortest_path(G, s, t, weight=...)` | reference shortest path |
+| `G.nodes`, `G.edges` | sommets et arêtes |
+| `G.neighbors(v)`, `G.degree[v]` | voisinage et degré |
+| `nx.is_regular(G)`, `nx.is_connected(G)` | propriétés globales |
+| `nx.to_numpy_array(G)` | matrice d'adjacence |
+| `nx.incidence_matrix(G)` | matrice d'incidence |
+| `G.subgraph(vertices)` | sous-graphe induit |
+| `nx.shortest_path(G, s, t, weight=...)` | plus court chemin de référence |
 
-### Petersen graph checks
+### Vérifications sur le graphe de Petersen
 
-- `G.is_directed()` → `False`;
-- 10 vertices, 15 edges;
-- `neighbors(2)` → `[7, 5, 4]` (order depends on insertion), i.e.
-  `{4, 5, 7}`; `degree(9)` → 3;
-- `nx.is_regular(G)` → `True`, degree 3;
-- connected, not bipartite;
-- the adjacency matrix is 10 × 10 and the incidence matrix is 10 × 15, with
-  two `1`s per column;
-- the induced subgraph on `{6, 3, 7, 8, 1, 5}` has 6 vertices and 6 edges.
+- `G.is_directed()` → `False` ;
+- 10 sommets, 15 arêtes ;
+- `neighbors(2)` → `[7, 5, 4]` (l'ordre dépend de l'insertion), soit
+  `{4, 5, 7}` ; `degree(9)` → 3 ;
+- `nx.is_regular(G)` → `True`, degré 3 ;
+- connexe, non biparti ;
+- la matrice d'adjacence est de taille 10 × 10 et la matrice d'incidence de
+  taille 10 × 15, avec deux `1` par colonne ;
+- le sous-graphe induit sur `{6, 3, 7, 8, 1, 5}` possède 6 sommets et 6 arêtes.
 
-The notebook draws the graph with the usual two-pentagon layout and displays
-the induced subgraph.
+Le notebook dessine le graphe avec la disposition habituelle en deux pentagones
+et affiche le sous-graphe induit.
 
 ---
 
-## 2. The weighted graph
+## 2. Le graphe pondéré
 
-`data/tp08_graph.txt` follows the multiline adjacency-list format of the
-statement and contains 20 vertices, 30 edges, integer weights between 1 and
-50.  It is loaded with:
+`data/tp08_graph.txt` suit le format de liste d'adjacence multiligne de l'énoncé
+et contient 20 sommets, 30 arêtes et des poids entiers entre 1 et 50. Il est
+chargé avec :
 
 ```python
 graph = nx.read_multiline_adjlist(path, nodetype=int)
 ```
 
-The fixture is deterministic (a fixed edge list), so the tests and the
-notebook always produce the same shortest path:
+Le jeu de données de test est déterministe (liste d'arêtes fixe), donc les tests
+et le notebook produisent toujours le même plus court chemin :
 
 ```
-0 -> 8 -> 6 -> 13 -> 19, length 112
+0 -> 8 -> 6 -> 13 -> 19, longueur 112
 ```
 
 ---
 
-## 3. Dijkstra by hand
+## 3. Dijkstra à la main
 
-The algorithm maintains:
+L'algorithme maintient :
 
-- `distances[v]`: best known distance from the source;
-- `previous[v]`: predecessor on the best path found so far;
-- `visited`: vertices whose distance is final.
+- `distances[v]` : meilleure distance connue depuis la source ;
+- `previous[v]` : prédécesseur sur le meilleur chemin trouvé jusqu'ici ;
+- `visited` : sommets dont la distance est définitive.
 
-At each iteration:
+À chaque itération :
 
-1. select the unvisited vertex `u` with the smallest `distances[u]`;
-2. mark it visited;
-3. for every neighbour `v` of `u`, relax the edge:
+1. sélectionner le sommet non visité `u` de plus petit `distances[u]` ;
+2. le marquer comme visité ;
+3. pour chaque voisin `v` de `u`, relâcher l'arête :
    `distances[v] = min(distances[v], distances[u] + w(u, v))`.
 
-When the target is selected, its distance is final; the path is reconstructed
-by following `previous` backwards.
+Lorsque la destination est sélectionnée, sa distance est définitive ; le chemin
+est reconstruit en remontant `previous` à rebours.
 
-### `dijkstra1` — visited list
+### `dijkstra1` — liste des visités
 
 ```python
 visited = []
@@ -111,12 +112,13 @@ if node not in visited:      # O(V)
     ...
 ```
 
-The membership test is linear.  It is performed for every candidate of the
-minimum search and for every neighbour of every selected vertex, hence an
-extra `O(V)` factor on sparse graphs.  On the 400-vertex test graph this
-version is about **20 times slower** than the set version.
+Le test d'appartenance est linéaire. Il est effectué pour chaque candidat de la
+recherche du minimum et pour chaque voisin de chaque sommet sélectionné, d'où un
+facteur `O(V)` supplémentaire sur les graphes creux. Sur le graphe de test à 400
+sommets, cette version est environ **20 fois plus lente** que la version avec
+ensemble.
 
-### `dijkstra2` — visited set
+### `dijkstra2` — ensemble des visités
 
 ```python
 visited = set()
@@ -124,12 +126,12 @@ visited = set()
 if node not in visited:      # O(1)
 ```
 
-The membership test becomes constant time.  The minimum search is still a
-linear scan over the unvisited vertices, so the total complexity is
-`O(V^2 + E)`: the algorithm is correct and much faster on sparse graphs, but
-still quadratic.
+Le test d'appartenance devient de coût constant. La recherche du minimum reste
+un parcours linéaire des sommets non visités, donc la complexité totale est
+`O(V^2 + E)` : l'algorithme est correct et bien plus rapide sur les graphes
+creux, mais reste quadratique.
 
-### `dijkstra_heap` — binary heap
+### `dijkstra_heap` — tas binaire
 
 ```python
 queue = [(0.0, start)]
@@ -137,124 +139,126 @@ queue = [(0.0, start)]
 heapq.heappush(queue, (candidate, neighbour))
 ```
 
-A heap returns the minimum in `O(log V)`.  Python's `heapq` has no
-decrease-key, so an improved distance pushes a new pair and stale pairs are
-ignored when popped.  The total cost is `O((V + E) log V)`, the best of the
-three for large sparse graphs.
+Un tas renvoie le minimum en `O(log V)`. Le module `heapq` de Python ne propose
+pas de diminution de clé (decrease-key), donc une distance améliorée empile une
+nouvelle paire et les paires obsolètes sont ignorées lors de leur extraction. Le
+coût total est `O((V + E) log V)`, le meilleur des trois pour les grands graphes
+creux.
 
-### Measured times
+### Temps mesurés
 
-On the 20-vertex course fixture:
+Sur le jeu de données de test à 20 sommets :
 
-| Version | Time |
+| Version | Temps |
 |---|---|
-| `dijkstra1` (list) | ≈ 145 µs |
-| `dijkstra2` (set) | ≈ 104 µs |
+| `dijkstra1` (liste) | ≈ 145 µs |
+| `dijkstra2` (ensemble) | ≈ 104 µs |
 | `dijkstra_heap` | ≈ 72 µs |
 
-On a 400-vertex / 900-edge random graph (same machine):
+Sur un graphe aléatoire à 400 sommets / 900 arêtes (même machine) :
 
-| Version | Time |
+| Version | Temps |
 |---|---|
-| `dijkstra1` (list) | ≈ 205 ms |
-| `dijkstra2` (set) | ≈ 9.4 ms |
-| `dijkstra_heap` | ≈ 1.6 ms |
+| `dijkstra1` (liste) | ≈ 205 ms |
+| `dijkstra2` (ensemble) | ≈ 9,4 ms |
+| `dijkstra_heap` | ≈ 1,6 ms |
 
-The exact numbers depend on the machine; the orders of magnitude and the
-ranking are stable.  All three versions return the same path and the same
-length as `networkx.shortest_path`.
+Les valeurs exactes dépendent de la machine ; les ordres de grandeur et le
+classement sont stables. Les trois versions renvoient le même chemin et la même
+longueur que `networkx.shortest_path`.
 
 ---
 
-## 4. OSMnx route calculator
+## 4. Calculateur d'itinéraires OSMnx
 
-Install the optional dependencies:
+Installer les dépendances facultatives :
 
 ```bash
 pip install -e ".[routing]"
 ```
 
-### Load the network
+### Charger le réseau
 
 ```python
 import osmnx as ox
 G = ox.graph_from_place("Lyon, France", network_type="drive")
 ```
 
-The result is a `MultiDiGraph`: an edge is a dictionary of parallel arcs, each
-with attributes such as `length`, `highway`, `name`, `speed_kph` and a
-geometry.  For example:
+Le résultat est un `MultiDiGraph` : une arête est un dictionnaire d'arcs
+parallèles, chacun portant des attributs tels que `length`, `highway`, `name`,
+`speed_kph` et une géométrie. Par exemple :
 
 ```python
 G.get_edge_data(u, v)
 # {0: {"length": 42.3, "highway": "residential", ...}}
 ```
 
-`edge_weight` in `dijkstra.py` handles this nested form by reading
-`data[0]["length"]` when necessary.
+`edge_weight` dans `dijkstra.py` gère cette forme imbriquée en lisant
+`data[0]["length"]` lorsque c'est nécessaire.
 
-### Display and inspect
+### Afficher et inspecter
 
-- `ox.plot_graph(G, node_size=0, edge_color="yellow")` draws the network;
-- `nodes, edges = ox.graph_to_gdfs(G)` converts it to GeoDataFrames, which can
-  be explored interactively;
-- `G.number_of_nodes()` and `G.number_of_edges()` give the size.
+- `ox.plot_graph(G, node_size=0, edge_color="yellow")` dessine le réseau ;
+- `nodes, edges = ox.graph_to_gdfs(G)` le convertit en GeoDataFrames, qui
+  peuvent être explorés de manière interactive ;
+- `G.number_of_nodes()` et `G.number_of_edges()` donnent la taille.
 
-### Renumber the vertices
+### Renuméroter les sommets
 
-OSMnx identifiers are large and sparse.  Relabel them before using an
-array-based algorithm:
+Les identifiants OSMnx sont grands et épars. Les renuméroter avant d'utiliser un
+algorithme basé sur des tableaux :
 
 ```python
 mapping = {node: index for index, node in enumerate(G.nodes)}
 H = nx.relabel_nodes(G, mapping)
 ```
 
-### Addresses and nearest nodes
+### Adresses et sommets les plus proches
 
-The two addresses of the statement are:
+Les deux adresses de l'énoncé sont :
 
-- **start**: 6 Rue Plasson et Chaize;
-- **destination**: 21 Rue Thénard.
+- **départ** : 6 Rue Plasson et Chaize ;
+- **destination** : 21 Rue Thénard.
 
-Geocode them, then find the closest graph nodes:
+Les géocoder, puis trouver les sommets du graphe les plus proches :
 
 ```python
 lat, lon = ox.geocode("6 Rue Plasson et Chaize, Lyon, France")
 origin = ox.distance.nearest_nodes(H, X=lon, Y=lat)
 ```
 
-`nearest_nodes` expects `X = longitude` and `Y = latitude`.
+`nearest_nodes` attend `X = longitude` et `Y = latitude`.
 
-### Route and map
+### Itinéraire et carte
 
 ```python
 distance, route = dijkstra_heap(H, origin, destination)
 ox.plot_graph_route(H, route, route_color="red", node_size=0)
 ```
 
-`routing.shortest_route` wraps this call; `routing.plot_route` draws the
-result.  The route length is in metres, because OSMnx stores lengths in
-metres.
+`routing.shortest_route` encapsule cet appel ; `routing.plot_route` dessine le
+résultat. La longueur de l'itinéraire est en mètres, car OSMnx stocke les
+longueurs en mètres.
 
-The OSMnx notebook contains the complete code.  It is not executed in the
-repository: the result depends on the OpenStreetMap data at download time and
-requires an internet connection.
-
----
-
-## 5. What the TP demonstrates
-
-- the difference between a **correct** algorithm and an **efficient**
-  implementation of it;
-- why the choice of a data structure (list vs set vs heap) changes the
-  complexity by orders of magnitude;
-- how the same code runs on a synthetic graph and on a real street network;
-- how NetworkX represents graphs, attributes and matrices.
+Le notebook OSMnx contient le code complet. Il n'est pas exécuté dans le dépôt :
+le résultat dépend des données OpenStreetMap au moment du téléchargement et
+nécessite une connexion Internet.
 
 ---
 
-## Run it
+## 5. Ce que le TP démontre
+
+- la différence entre un algorithme **correct** et une implémentation
+  **efficace** de celui-ci ;
+- pourquoi le choix d'une structure de données (liste, ensemble ou tas) change
+  la complexité de plusieurs ordres de grandeur ;
+- comment le même code s'exécute sur un graphe synthétique et sur un réseau
+  routier réel ;
+- comment NetworkX représente les graphes, les attributs et les matrices.
+
+---
+
+## Exécution
 
 ```bash
 python -m sda.tp08_networkx.demo

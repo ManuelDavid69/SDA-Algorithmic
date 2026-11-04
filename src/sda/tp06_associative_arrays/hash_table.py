@@ -1,4 +1,4 @@
-"""Hash table with open addressing and linear probing (TP 6, exercise 1)."""
+"""Table de hachage à adressage ouvert et sondage linéaire (TP 6, exercice 1)."""
 
 from __future__ import annotations
 
@@ -9,26 +9,27 @@ DELETED = object()
 
 
 class HashTable:
-    """A fixed-size hash table with linear probing and DELETED markers.
+    """Une table de hachage de taille fixe avec sondage linéaire et marqueurs DELETED.
 
-    The hash function of the statement is ``h(k) = k mod m``.  Deletions use a
-    tombstone (``DELETED``) instead of resetting the slot to ``EMPTY``: a
-    search must keep probing past a deleted slot, otherwise it could stop
-    before reaching a key that was inserted after a collision.
+    La fonction de hachage de l'énoncé est ``h(k) = k mod m``. Les suppressions
+    utilisent une pierre tombale (``DELETED``) au lieu de remettre l'emplacement
+    à ``EMPTY`` : une recherche doit continuer à sonder au-delà d'un emplacement
+    supprimé, sinon elle pourrait s'arrêter avant d'atteindre une clé insérée
+    après une collision.
     """
 
     def __init__(self, size: int = 1009, hash_function=None) -> None:
         if size < 1:
-            raise ValueError("the table must contain at least one slot")
+            raise ValueError("la table doit contenir au moins un emplacement")
         self.capacity = size
         self._keys: list[Any] = [EMPTY] * size
         self._values: list[Any] = [None] * size
         self._size = 0
-        self._occupied = 0  # slots that are not EMPTY (keys + tombstones)
+        self._occupied = 0  # emplacements qui ne sont pas EMPTY (clés + pierres tombales)
         self._hash_function = hash_function or (lambda key: key % size)
 
     # ------------------------------------------------------------------
-    # Basic properties
+    # Propriétés de base
     # ------------------------------------------------------------------
     def __len__(self) -> int:
         return self._size
@@ -45,27 +46,28 @@ class HashTable:
 
     @property
     def load_factor(self) -> float:
-        """Number of stored elements divided by the capacity."""
+        """Nombre d'éléments stockés divisé par la capacité."""
         return self._size / self.capacity
 
     @property
     def occupied_ratio(self) -> float:
-        """Slots that are not EMPTY, including tombstones."""
+        """Emplacements qui ne sont pas EMPTY, pierres tombales comprises."""
         return self._occupied / self.capacity
 
     def _index(self, key: int) -> int:
         if not isinstance(key, int):
-            raise TypeError("this table only indexes integer keys")
+            raise TypeError("cette table n'indexe que des clés entières")
         return self._hash_function(key) % self.capacity
 
     # ------------------------------------------------------------------
-    # Insertion, search and deletion
+    # Insertion, recherche et suppression
     # ------------------------------------------------------------------
     def insert(self, key: int, value: Any) -> int:
-        """Insert or update ``key``; return the number of extra probes.
+        """Insère ou met à jour ``key`` ; renvoie le nombre de sondages supplémentaires.
 
-        A probe is one slot examined after the home slot.  A return value of
-        ``0`` therefore means that the key went directly into its home slot.
+        Un sondage correspond à un emplacement examiné après l'emplacement
+        d'origine. Une valeur de retour de ``0`` signifie donc que la clé est
+        allée directement dans son emplacement d'origine.
         """
         index = self._index(key)
         first_deleted: int | None = None
@@ -87,13 +89,13 @@ class HashTable:
                 return probes
             index = (index + 1) % self.capacity
 
-        # No EMPTY slot was found: reuse a tombstone if possible.
+        # Aucun emplacement EMPTY trouvé : réutiliser une pierre tombale si possible.
         if first_deleted is not None:
             self._keys[first_deleted] = key
             self._values[first_deleted] = value
             self._size += 1
             return self.capacity
-        raise OverflowError("the hash table is full")
+        raise OverflowError("la table de hachage est pleine")
 
     def _find_slot(self, key: int) -> int:
         index = self._index(key)
@@ -110,7 +112,7 @@ class HashTable:
         return self._values[self._find_slot(key)]
 
     def delete(self, key: int) -> Any:
-        """Delete ``key`` and return its value; leave a DELETED tombstone."""
+        """Supprime ``key`` et renvoie sa valeur ; laisse une pierre tombale DELETED."""
         index = self._find_slot(key)
         value = self._values[index]
         self._keys[index] = DELETED
@@ -119,7 +121,7 @@ class HashTable:
         return value
 
     def slot_of(self, key: int) -> int:
-        """Index of the slot that contains ``key`` (mainly for tests)."""
+        """Indice de l'emplacement qui contient ``key`` (principalement pour les tests)."""
         return self._find_slot(key)
 
     def keys(self) -> list[int]:

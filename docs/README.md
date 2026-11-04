@@ -1,35 +1,38 @@
 # Documentation
 
-One document per practical session.  Each one follows the same structure:
+Un document par séance de travaux pratiques. Chacun suit la même structure :
 
-1. objectives and link with the course;
-2. implementation choices;
-3. complexity analysis;
-4. written answers to the theoretical questions;
-5. how to run the code and the tests.
+1. objectifs et lien avec le cours ;
+2. choix d'implémentation ;
+3. analyse de complexité ;
+4. réponses rédigées aux questions théoriques ;
+5. comment lancer le code et les tests.
 
-| Session | Topic | Document |
+| Séance | Sujet | Document |
 |---|---|---|
-| 1 | Linked lists, train simulation, stacks, brackets | [TP01-data-structures.md](TP01-data-structures.md) |
-| 2 | Complexity, growth classes, benchmarks | [TP02-complexity.md](TP02-complexity.md) |
-| 3 | Recursion, divide and conquer, Hanoi, search | [TP03-recursion.md](TP03-recursion.md) |
-| 4 | Selection, merge, two-thirds sort, candies | [TP04-sorting.md](TP04-sorting.md) |
-| 5 | BST, expression trees, ternary trees, Akinator | [TP05-trees.md](TP05-trees.md) |
-| 6 | Hash tables, AVL trees, vinyl catalogue | [TP06-associative-arrays.md](TP06-associative-arrays.md) |
-| 7 | Graphs, Euler, colouring, covers | [TP07-graphs.md](TP07-graphs.md) |
-| 8 | NetworkX, Dijkstra, OSMnx routing | [TP08-networkx-dijkstra.md](TP08-networkx-dijkstra.md) |
+| 1 | Listes chaînées, simulation de train, piles, parenthèses | [TP01-data-structures.md](TP01-data-structures.md) |
+| 2 | Complexité, classes de croissance, benchmarks | [TP02-complexity.md](TP02-complexity.md) |
+| 3 | Récursivité, diviser pour régner, Hanoï, recherche | [TP03-recursion.md](TP03-recursion.md) |
+| 4 | Tri par sélection, tri fusion, tri aux deux tiers, bonbons | [TP04-sorting.md](TP04-sorting.md) |
+| 5 | ABR, arbres d'expression, arbres ternaires, Akinator | [TP05-trees.md](TP05-trees.md) |
+| 6 | Tables de hachage, arbres AVL, catalogue de vinyles | [TP06-associative-arrays.md](TP06-associative-arrays.md) |
+| 7 | Graphes, Euler, coloration, couvertures | [TP07-graphs.md](TP07-graphs.md) |
+| 8 | NetworkX, Dijkstra, routage OSMnx | [TP08-networkx-dijkstra.md](TP08-networkx-dijkstra.md) |
 
-The notebooks are in [`../notebooks`](../notebooks):
+Les notebooks se trouvent dans [`../notebooks`](../notebooks) :
 
-- `tp08_networkx_dijkstra.ipynb` — executed, with outputs and figures;
-- `tp08_osmnx_routing.ipynb` — code for the optional real-world routing part.
+- `tp08_networkx_dijkstra.ipynb` — exécuté, avec sorties et figures ;
+- `tp08_osmnx_routing.ipynb` — code pour la partie optionnelle de routage dans le
+  monde réel.
 
 ## Conventions
 
-- Code comments, identifiers and tests are in English; the course statements
-  and the written answers keep the original French terminology in mind
-  (e.g. *tas*, *parcours*, *complexité*).
-- Positions are 0-based in the code and are documented when the statement
-  itself uses another convention.
-- Every complexity claim in these documents is either proved or illustrated
-  by a benchmark in the corresponding module.
+- Les commentaires et les docstrings sont désormais en français ; les
+  identifiants (variables, fonctions, classes, fichiers et modules) restent en
+  anglais. Les énoncés du cours et les réponses rédigées conservent la
+  terminologie française d'origine (par exemple *tas*, *parcours*,
+  *complexité*).
+- Les positions sont indexées à partir de 0 dans le code et sont documentées
+  lorsque l'énoncé lui-même utilise une autre convention.
+- Toute affirmation de complexité dans ces documents est soit démontrée, soit
+  illustrée par un benchmark dans le module correspondant.

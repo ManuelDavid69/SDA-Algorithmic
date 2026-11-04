@@ -1,4 +1,4 @@
-"""Graphs used in the TD and TP 7."""
+"""Graphes utilisés en TD et TP 7."""
 
 from __future__ import annotations
 
@@ -7,19 +7,19 @@ from itertools import combinations
 from .graph import Graph
 
 PETERSEN_EDGES = [
-    # outer pentagon
+    # pentagone extérieur
     (6, 7),
     (7, 8),
     (8, 9),
     (9, 10),
     (10, 6),
-    # spokes
+    # rayons
     (6, 1),
     (7, 2),
     (8, 3),
     (9, 4),
     (10, 5),
-    # inner pentagram
+    # pentagramme intérieur
     (1, 3),
     (3, 5),
     (5, 2),
@@ -38,7 +38,7 @@ ENVELOPE_EDGES = [
     ("UR", "LL"),
 ]
 
-# Languages taken by each student (exercise 2 of the TD).
+# Langues suivies par chaque étudiant (exercice 2 du TD).
 COURSE_STUDENTS = {
     "anglais": ["Axel", "Corentin", "Emilie"],
     "russe": ["Béatrice", "Dylan", "Emilie"],
@@ -57,7 +57,7 @@ def envelope_graph() -> Graph:
 
 
 def language_bipartite_graph() -> Graph:
-    """Students on one side, courses on the other, one edge per enrolment."""
+    """Étudiants d'un côté, cours de l'autre, une arête par inscription."""
     graph = Graph()
     for course, students in COURSE_STUDENTS.items():
         course_vertex = f"course:{course}"
@@ -68,7 +68,7 @@ def language_bipartite_graph() -> Graph:
 
 
 def students_graph() -> Graph:
-    """Two students are adjacent when they share at least one course."""
+    """Deux étudiants sont adjacents lorsqu'ils partagent au moins un cours."""
     graph = Graph()
     graph.add_vertices(COURSE_STUDENTS["anglais"] + [
         student for students in COURSE_STUDENTS.values() for student in students
@@ -84,7 +84,7 @@ def students_graph() -> Graph:
 
 
 def course_graph() -> Graph:
-    """Two courses are adjacent when at least one student takes both."""
+    """Deux cours sont adjacents lorsqu'au moins un étudiant suit les deux."""
     graph = Graph()
     graph.add_vertices(COURSE_STUDENTS)
     for first, second in combinations(COURSE_STUDENTS, 2):

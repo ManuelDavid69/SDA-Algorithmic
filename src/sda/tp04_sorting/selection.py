@@ -1,4 +1,4 @@
-"""Selection sort (TP 4, exercise 1)."""
+"""Tri par sélection (TP 4, exercice 1)."""
 
 from __future__ import annotations
 
@@ -8,15 +8,15 @@ T = TypeVar("T")
 
 
 def selection_sort(items: list[T]) -> list[T]:
-    """Sort ``items`` in place with the selection sort algorithm.
+    """Trie ``items`` sur place avec l'algorithme de tri par sélection.
 
-    Loop invariant: before iteration ``i``, ``items[:i]`` contains the ``i``
-    smallest elements of the list, in sorted order.  At iteration ``i`` the
-    algorithm selects the smallest element of ``items[i:]`` and swaps it into
-    position ``i``.
+    Invariant de boucle : avant l'itération ``i``, ``items[:i]`` contient les
+    ``i`` plus petits éléments de la liste, dans l'ordre trié.  À l'itération
+    ``i``, l'algorithme sélectionne le plus petit élément de ``items[i:]`` et
+    l'échange avec la position ``i``.
 
-    The number of comparisons is ``n(n-1)/2`` in every case, so the time
-    complexity is ``Theta(n^2)`` in the best and in the worst case.
+    Le nombre de comparaisons est ``n(n-1)/2`` dans tous les cas, la
+    complexité en temps est donc ``Theta(n^2)`` au meilleur comme au pire cas.
     """
     for i in range(len(items)):
         minimum = i

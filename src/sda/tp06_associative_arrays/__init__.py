@@ -1,4 +1,4 @@
-"""Practical work 6: hash tables, AVL trees and the vinyl catalogue."""
+"""Travaux pratiques 6 : tables de hachage, arbres AVL et catalogue de vinyles."""
 
 from .avl import AVLTree
 from .catalogue import Catalogue, VinylRecord
